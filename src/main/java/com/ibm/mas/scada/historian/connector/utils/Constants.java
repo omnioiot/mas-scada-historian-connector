@@ -86,7 +86,7 @@ public final class Constants {
     public static final int RUN_TYPE_TEST = 3;
 
     /** Tagpath Seperator */
-    public static final String TAGPATH_SEPARATOR = "\\";
+    public static final String TAGPATH_SEPARATOR = ".";
 
     /** IoT Data for OSIPI **/
     public static final int IOTP_OSIPI_DEVICETYPE = 0;
@@ -143,5 +143,3 @@ public final class Constants {
     private Constants() {
     }
 }
-
-

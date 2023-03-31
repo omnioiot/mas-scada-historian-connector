@@ -17,7 +17,7 @@ INSTALLTYPE=$1
 export INSTALLTYPE
 
 # MAS Data Connector home
-MASDCHOME=$HOME/ibm/masshc
+MASDCHOME=$HOME/ibm/masshcv2
 
 #
 # Check OS NAME

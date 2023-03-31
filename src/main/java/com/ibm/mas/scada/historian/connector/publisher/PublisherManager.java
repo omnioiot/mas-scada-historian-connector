@@ -45,9 +45,10 @@ public class PublisherManager {
         this.scadaType = config.getScadaType();
         JSONObject connectionConfig = config.getConnectionConfig();
         this.publishProtocol = connectionConfig.optString("publishProtocol", Constants.PUBLISH_TYPE_MQTT);
-        this.iotClientType = connectionConfig.optInt("iotClientType", Constants.DEVICE_CLIENT);
-        // this.iotClientType = connectionConfig.optInt("iotClientType", Constants.GATEWAY_CLIENT);
+        // this.iotClientType = connectionConfig.optInt("iotClientType",
+        // Constants.GATEWAY_CLIENT);
         JSONObject iotpConfig = connectionConfig.getJSONObject("iotp");
+        this.iotClientType = iotpConfig.optInt("iotClientType", Constants.DEVICE_CLIENT);
         this.orgId = iotpConfig.getString("orgId");
     }
 
@@ -87,7 +88,11 @@ public class PublisherManager {
                     deviceType = iotDataItems[Constants.IOTP_OSIPI_DEVICETYPE];
                     deviceId = iotDataItems[Constants.IOTP_OSIPI_DEVICEID];
                     eventName = iotDataItems[Constants.IOTP_OSIPI_EVT_NAME];
-                    msgObject.put("evt_timestamp", Integer.valueOf(iotDataItems[Constants.IOTP_OSIPI_EVT_TIMESTAMP]));
+                    /*
+                     * msgObject.put("evt_timestamp",
+                     * Integer.valueOf(iotDataItems[Constants.IOTP_OSIPI_EVT_TIMESTAMP]));
+                     */
+                    msgObject.put("evt_timestamp", iotDataItems[Constants.IOTP_OSIPI_EVT_TIMESTAMP]);
                     msgObject.put("value", iotDataItems[Constants.IOTP_OSIPI_VALUE]);
                     msgObject.put("decimalAccuracy", iotDataItems[Constants.IOTP_OSIPI_DECIMALACCURACY]);
                     msgObject.put("name", iotDataItems[Constants.IOTP_OSIPI_NAME]);
@@ -127,7 +132,7 @@ public class PublisherManager {
                 }
 
                 clientId = "d:" + orgId + ":" + deviceType + ":" + deviceId;
-                if (clientId.equals(lastClientId)) { 
+                if (clientId.equals(lastClientId)) {
                     publisher.publish(null, eventName, msgObject.toString());
                 } else {
                     if (!lastClientId.equals("")) {
@@ -143,7 +148,8 @@ public class PublisherManager {
                 offsetRecord.setUploadedCount(1);
                 try {
                     Thread.sleep(1);
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                }
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
@@ -174,7 +180,8 @@ public class PublisherManager {
                 offsetRecord.setUploadedCount(1);
                 try {
                     Thread.sleep(1);
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                }
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
@@ -193,7 +200,7 @@ public class PublisherManager {
         Runnable thread = new Runnable() {
             public void run() {
                 logger.info("Start iotData publish cycle");
-                while(true) {
+                while (true) {
                     if (iotClientType == Constants.DEVICE_CLIENT) {
                         publishDataFromQueueByDevice();
                     } else {
@@ -201,7 +208,8 @@ public class PublisherManager {
                     }
                     try {
                         Thread.sleep(5000);
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                    }
                 }
             }
         };
@@ -220,11 +228,12 @@ public class PublisherManager {
         Runnable thread = new Runnable() {
             public void run() {
                 logger.info("Start upload cycle");
-                while(true) {
+                while (true) {
                     uploadDataFromQueue();
                     try {
                         Thread.sleep(5000);
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                    }
                 }
             }
         };
@@ -235,5 +244,3 @@ public class PublisherManager {
     }
 
 }
-
-
