@@ -58,7 +58,7 @@ public class TagDimension {
         this.tagDimension = mappingConfig.optJSONObject("dimensions");
         this.deviceTypes = mappingConfig.optJSONArray("deviceTypes");
         if (deviceTypes.length() == 0 || tagDimension.length() == 0) {
-            throw new IllegalArgumentException ("Specified parameter is not valid");
+            throw new IllegalArgumentException("Specified parameter is not valid");
         }
         this.tagpathMap = tagDimension.optString("tagpath");
 
@@ -114,14 +114,14 @@ public class TagDimension {
             logger.info(String.format("Process device type: %s", entityTypeName));
 
             etypeAPI = "/api/meta/v1/" + tenantId + "/entityType";
- 
+
             try {
                 restClient.get(etypeAPI + "/" + entityTypeName);
                 logger.info(String.format("EntityType GET Status Code: %d", restClient.getResponseCode()));
                 if (restClient.getResponseCode() != 200) {
                     entityExists = false;
                 }
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 logger.info("Get EntityType " + entityTypeName + " failed. Exception: " + ex.getMessage());
                 logger.log(Level.FINE, ex.getMessage(), ex);
                 entityExists = false;
@@ -150,11 +150,12 @@ public class TagDimension {
                     dataItemDtoArray.put(createDataDtoObject("value", "METRIC", "VALUE", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("type", "METRIC", "TYPE", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("unit", "METRIC", "UNIT", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("decimalAccuracy", "METRIC", "DECIMALACCURACY", "LITERAL"));
+                    dataItemDtoArray
+                            .put(createDataDtoObject("decimalAccuracy", "METRIC", "DECIMALACCURACY", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("label", "METRIC", "LAVEL", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("evt_name", "METRIC", "EVT_NAME", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("tag", "METRIC", "TAG", "LITERAL"));
-                    dataItemDtoArray.put(createDataDtoObject("TAGID",  "DIMENSION", "TAGID", "LITERAL"));
+                    dataItemDtoArray.put(createDataDtoObject("TAGID", "DIMENSION", "TAGID", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("TAGPATH", "DIMENSION", "TAGPATH", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("SITE", "DIMENSION", "SITE", "LITERAL"));
                     dataItemDtoArray.put(createDataDtoObject("CATEGORIES", "DIMENSION", "CATEGORIES", "LITERAL"));
@@ -201,7 +202,7 @@ public class TagDimension {
                         logger.info(String.format("EntityType uuid: %s", uuid));
                         entityExists = true;
                     }
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     logger.warning("EntityType " + entityTypeName + " failed to create. Exception: " + ex.getMessage());
                     logger.log(Level.FINE, ex.getMessage(), ex);
                     entityExists = false;
@@ -219,7 +220,7 @@ public class TagDimension {
         List<String> doneTags = new ArrayList<String>();
         Iterator<String> it = tagList.iterator();
         while (it.hasNext()) {
-            if (batchCount == 0 ) {
+            if (batchCount == 0) {
                 dimensionObj = new JSONArray();
                 batchCount = 1;
             }
@@ -244,7 +245,7 @@ public class TagDimension {
                 logger.info(String.format("Add dimension: tagpath:%s Type:%s Id:%s", tagpath, deviceType, deviceId));
 
                 Iterator<String> keys = dimensionsJson.keys();
-                while(keys.hasNext()) {
+                while (keys.hasNext()) {
                     String key = keys.next();
                     String val = dimensionsJson.getString(key);
                     dimensionObj.put(createDimItem(deviceId, key.toUpperCase(), "LITERAL", val));
@@ -258,36 +259,42 @@ public class TagDimension {
                 logger.fine("Dimension was already added: tagpath: " + tagpath + "    Dimention ID: " + deviceId);
                 dimRegistered += 1;
             }
- 
+
             if (dimensionStatus == 0) {
-                for (int retry=0; retry<5; retry++) {
+                for (int retry = 0; retry < 5; retry++) {
                     done = true;
-                    if (batchCount == 1) break;
+                    if (batchCount == 1)
+                        break;
                     try {
                         // invoke API to create dimensional data
                         logger.fine("DimensionObj: " + dimensionObj.toString());
                         restClient.post(dimAPI, dimensionObj.toString());
                         logger.info(String.format("Dimension POST Status Code: %d", restClient.getResponseCode()));
-                    } catch(Exception ex) {
+                    } catch (Exception ex) {
                         logger.info("Exception message: " + ex.getMessage());
                         logger.log(Level.FINE, ex.getMessage(), ex);
                         done = false;
                     }
-                    if (done) break;
+                    if (done)
+                        break;
                     try {
                         Thread.sleep(5000);
-                    } catch(Exception e) {}
-                    logger.info(String.format("Retry REST call: retry count=%d", retry)); 
+                    } catch (Exception e) {
+                    }
+                    logger.info(String.format("Retry REST call: retry count=%d", retry));
                 }
                 batchCount = 0;
             }
-            if (done == false) break;
+            if (done == false)
+                break;
             totalCount = totalCount - 1;
         }
 
         if (done == false) {
-            // cycle didn't complete successfully, reset dimension state so that these can be retried in the next cycle
-            logger.info("Could not register dimensions of all tags in the cycle. Backing out status of unregistered tags.");
+            // cycle didn't complete successfully, reset dimension state so that these can
+            // be retried in the next cycle
+            logger.info(
+                    "Could not register dimensions of all tags in the cycle. Backing out status of unregistered tags.");
             Iterator<String> doneTagList = doneTags.iterator();
             while (doneTagList.hasNext()) {
                 String id = doneTagList.next();
@@ -298,7 +305,7 @@ public class TagDimension {
         } else {
             retval = 1;
         }
-    
+
         logger.info(String.format("Total=%d New=%d AlreadyRegistered=%d", totalCountInCache, dimAdded, dimRegistered));
         return retval;
     }
@@ -313,24 +320,43 @@ public class TagDimension {
         JSONObject eventObj = new JSONObject();
         JSONArray dataItemDtoArray = new JSONArray();
         JSONArray evtDtoArray = new JSONArray();
- 
+
         entityTypeObj.put("name", entityTypeName);
         entityTypeObj.put("description", entityTypeName);
-        dataItemDtoArray.put(createDataDtoObjectV2("evt_timestamp", "EventA", "NUMBER", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("intvalue", "EventA", "NUMBER", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("floatvalue", "EventA", "NUMBER", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("stringvalue", "EventA", "LITERAL", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("datevalue", "EventA", "LITERAL", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("type", "EventA", "NUMBER", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("unit", "EventA", "LITERAL", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("decimalAccuracy", "EventA", "NUMBER", "METRIC"));
-        dataItemDtoArray.put(createDataDtoObjectV2("tag", "EventA", "LITERAL", "METRIC"));
-        // dataItemDtoArray.put(createDataDtoObjectV2("evt_name", "EventA", "LITERAL", "METRIC"));
-
-        dataItemDtoArray.put(createDataDtoObjectV2("TAGID", "EventA", "LITERAL", "DIMENSION"));
-        dataItemDtoArray.put(createDataDtoObjectV2("TAGPATH", "EventA", "LITERAL", "DIMENSION"));
-        dataItemDtoArray.put(createDataDtoObjectV2("DATATYPE", "EventA", "LITERAL", "DIMENSION"));
-        dataItemDtoArray.put(createDataDtoObjectV2("SITE", "EventA", "LITERAL", "DIMENSION"));
+        // dataItemDtoArray.put(createDataDtoObjectV2("evt_timestamp", "EventA",
+        // "NUMBER", "METRIC"));
+        // dataItemDtoArray.put(createDataDtoObjectV2("intvalue", "EventA", "NUMBER",
+        // "METRIC"));
+        // dataItemDtoArray.put(createDataDtoObjectV2("floatvalue", "EventA", "NUMBER",
+        // "METRIC"));
+        // dataItemDtoArray.put(createDataDtoObjectV2("stringvalue", "EventA",
+        // "LITERAL", "METRIC"));
+        // dataItemDtoArray.put(createDataDtoObjectV2("datevalue", "EventA", "LITERAL",
+        // "METRIC"));
+        // dataItemDtoArray.put(createDataDtoObjectV2("type", "EventA", "NUMBER",
+        // "METRIC"));
+        // dataItemDtoArray.put(createDataDtoObjectV2("unit", "EventA", "LITERAL",
+        // "METRIC"));
+        // dataItemDtoArray.put(createDataDtoObjectV2("decimalAccuracy", "EventA",
+        // "NUMBER", "METRIC"));
+        // dataItemDtoArray.put(createDataDtoObjectV2("tag", "EventA", "LITERAL",
+        // "METRIC"));
+        // // dataItemDtoArray.put(createDataDtoObjectV2("evt_name", "EventA",
+        // "LITERAL", "METRIC"));
+        // Defining the metrics
+        dataItemDtoArray.put(createDataDtoObjectV2("evt_timestamp", "scadaevent", "TIMESTAMP", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("value", "scadaevent", "NUMBER", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("type", "scadaevent", "LITERAL", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("unit", "scadaevent", "LITERAL", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("decimalAccuracy", "scadaevent", "NUMBER", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("tag", "scadaevent", "LITERAL", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("name", "scadaevent", "LITERAL", "METRIC"));
+        dataItemDtoArray.put(createDataDtoObjectV2("label", "scadaevent", "LITERAL", "METRIC"));
+        // Defining the dimensions
+        dataItemDtoArray.put(createDataDtoObjectV2("TAGID", "scadaevent", "LITERAL", "DIMENSION"));
+        dataItemDtoArray.put(createDataDtoObjectV2("TAGPATH", "scadaevent", "LITERAL", "DIMENSION"));
+        dataItemDtoArray.put(createDataDtoObjectV2("DATATYPE", "scadaevent", "LITERAL", "DIMENSION"));
+        dataItemDtoArray.put(createDataDtoObjectV2("SITE", "scadaevent", "LITERAL", "DIMENSION"));
         entityTypeObj.put("dataItemDto", dataItemDtoArray);
 
         evtDtoArray.put(createEventDtoObjectV2("EventA", "evt_timestamp"));
@@ -349,7 +375,7 @@ public class TagDimension {
                 uuid = retObject.getString("uuid");
                 logger.info(String.format("EntityType uuid: %s", uuid));
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.warning("EntityType " + entityTypeName + " failed to create. Exception: " + ex.getMessage());
             logger.log(Level.FINE, ex.getMessage(), ex);
         }
@@ -370,23 +396,24 @@ public class TagDimension {
 
         /* Create entity types */
         /*
-        for (int i = 0; i < deviceTypes.length(); i++) {
-            JSONObject deviceType = deviceTypes.getJSONObject(i);
-            String entityTypeName = deviceType.getString("type");
-
-            logger.info(String.format("Process device type: %s", entityTypeName));
-
-            String etypeAPI = "/api/v2/deviceTypes";
-        }
-
-        logger.info(String.format("Create Dimension Data: Tagpath InCache:%d", totalCountInCache));
-        */
+         * for (int i = 0; i < deviceTypes.length(); i++) {
+         * JSONObject deviceType = deviceTypes.getJSONObject(i);
+         * String entityTypeName = deviceType.getString("type");
+         * 
+         * logger.info(String.format("Process device type: %s", entityTypeName));
+         * 
+         * String etypeAPI = "/api/v2/deviceTypes";
+         * }
+         * 
+         * logger.info(String.format("Create Dimension Data: Tagpath InCache:%d",
+         * totalCountInCache));
+         */
 
         boolean done = true;
         List<String> doneTags = new ArrayList<String>();
         Iterator<String> it = tagList.iterator();
         while (it.hasNext()) {
-            if (batchCount == 0 ) {
+            if (batchCount == 0) {
                 dimensionObj = new JSONArray();
                 batchCount = 1;
             }
@@ -426,24 +453,25 @@ public class TagDimension {
                 devItem.put("alias", "null");
                 devItem.put("authToken", token);
                 deviceObj.put(devItem);
-            
+
                 try {
                     logger.fine("V2 Device Object: " + deviceObj.toString());
                     restClient.post(deviceAPI, deviceObj.toString());
                     logger.info(String.format("V2 Device create Status Code: %d", restClient.getResponseCode()));
                     td.setDeviceStatus(1);
                     tc.update(id, td);
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     logger.info("V2 Device Create Exception message: " + ex.getMessage());
                     logger.log(Level.FINE, ex.getMessage(), ex);
                 }
             }
- 
+
             if (dimensionStatus == 0) {
-                logger.info(String.format("Add dimension: Type:%s TypeUUID:%s DIM:%s", deviceType, uuid, dimensionsString));
+                logger.info(
+                        String.format("Add dimension: Type:%s TypeUUID:%s DIM:%s", deviceType, uuid, dimensionsString));
 
                 Iterator<String> keys = dimensionsJson.keys();
-                while(keys.hasNext()) {
+                while (keys.hasNext()) {
                     String key = keys.next();
                     String val = dimensionsJson.getString(key);
                     dimensionObj.put(createDimItem(deviceId, key.toUpperCase(), "LITERAL", val));
@@ -457,36 +485,42 @@ public class TagDimension {
                 logger.fine("Dimension was already added: tagpath: " + tagpath + "    Dimention ID: " + deviceId);
                 dimRegistered += 1;
             }
- 
+
             if (dimensionStatus == 0) {
-                for (int retry=0; retry<5; retry++) {
+                for (int retry = 0; retry < 5; retry++) {
                     done = true;
-                    if (batchCount == 1) break;
+                    if (batchCount == 1)
+                        break;
                     try {
                         logger.fine("DIMENSION Object: " + dimensionObj.toString());
                         restClient.post(dimAPI, dimensionObj.toString());
                         logger.info(String.format("Dimension POST Status Code: %d", restClient.getResponseCode()));
                         logger.fine(String.format("Dimension POST Status Body: %s", restClient.getResponseBody()));
-                    } catch(Exception ex) {
+                    } catch (Exception ex) {
                         logger.info("Exception message: " + ex.getMessage());
                         logger.log(Level.FINE, ex.getMessage(), ex);
                         done = false;
                     }
-                    if (done) break;
+                    if (done)
+                        break;
                     try {
                         Thread.sleep(5000);
-                    } catch(Exception e) {}
-                    logger.info(String.format("Retry REST call: retry count=%d", retry)); 
+                    } catch (Exception e) {
+                    }
+                    logger.info(String.format("Retry REST call: retry count=%d", retry));
                 }
                 batchCount = 0;
             }
-            if (done == false) break;
+            if (done == false)
+                break;
             totalCount = totalCount - 1;
         }
 
         if (done == false) {
-            // cycle didn't complete successfully, reset dimension state so that these can be retried in the next cycle
-            logger.info("Could not register dimensions of all tags in the cycle. Backing out status of unregistered tags.");
+            // cycle didn't complete successfully, reset dimension state so that these can
+            // be retried in the next cycle
+            logger.info(
+                    "Could not register dimensions of all tags in the cycle. Backing out status of unregistered tags.");
             Iterator<String> doneTagList = doneTags.iterator();
             while (doneTagList.hasNext()) {
                 String id = doneTagList.next();
@@ -497,7 +531,7 @@ public class TagDimension {
         } else {
             retval = 1;
         }
-    
+
         logger.info(String.format("Total=%d New=%d AlreadyRegistered=%d", totalCountInCache, dimAdded, dimRegistered));
         return retval;
     }
@@ -541,7 +575,7 @@ public class TagDimension {
     private static void startDimensionThread() {
         Runnable thread = new Runnable() {
             public void run() {
-                while(true) {
+                while (true) {
                     int status;
                     if (apiVersion == 1) {
                         status = createDimensionsV1();
@@ -553,7 +587,8 @@ public class TagDimension {
                     }
                     try {
                         Thread.sleep(10000);
-                    } catch (Exception e) { }
+                    } catch (Exception e) {
+                    }
                 }
             }
         };
@@ -563,4 +598,3 @@ public class TagDimension {
         return;
     }
 }
-

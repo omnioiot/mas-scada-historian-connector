@@ -74,7 +74,7 @@ public class ConfigureInterfaces {
                 String piId = pi.getId();
                 logger.info("Type: " + deviceType + " Physical Interface Id: " + piId);
 
-                /* String evtType = "EventA"; */
+                // String evtType = "EventA";
                 String evtType = "scadaevent";
                 EventType eventType = iotp.createEventType(evtType, piSchemaId);
                 String evtId = eventType.getId();
