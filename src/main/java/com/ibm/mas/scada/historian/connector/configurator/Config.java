@@ -39,9 +39,10 @@ public class Config {
     private static int scadaType = Constants.SCADA_OSIPI;
     private static int connectorType = Constants.CONNECTOR_DEVICE;
     private static int SAASEnv = 0;
-    private static int apiVersion = 1;
+    private static int apiVersion = 2;
 
-    public Config(String configPath, String dataPath, String logPath) throws IllegalArgumentException, IOException, Exception {
+    public Config(String configPath, String dataPath, String logPath)
+            throws IllegalArgumentException, IOException, Exception {
         this.configDir = getConfigFromEnv("configDir", "MASSHC_CONFIG_DIR", configPath);
         this.dataDir = getConfigFromEnv("dataDir", "MASSHC_DATA_DIR", dataPath);
         this.logDir = getConfigFromEnv("logDir", "MASSHC_LOG_DIR", logPath);
@@ -129,16 +130,17 @@ public class Config {
         try {
             String fileContent = new String(Files.readAllBytes(Paths.get(connectionConfigFile)));
             if (fileContent == null || fileContent.equals("")) {
-                throw new IOException ("Connection configuration file is missing or empty.");
-            } 
+                throw new IOException("Connection configuration file is missing or empty.");
+            }
             this.connectionConfig = new JSONObject(fileContent);
 
             fileContent = new String(Files.readAllBytes(Paths.get(mappingConfigFile)));
             if (fileContent == null || fileContent.equals("")) {
-                throw new IOException ("Mapping file is missing or empty.");
-            } 
+                throw new IOException("Mapping file is missing or empty.");
+            }
             this.mappingConfig = new JSONObject(fileContent);
-            this.apiVersion = mappingConfig.optInt("apiVersion", 1);
+            JSONObject iotp = connectionConfig.getJSONObject("iotp");
+            this.apiVersion = iotp.optInt("apiVersion", 2);
         } catch (IOException ioe) {
             logger.info("Invalid configuration. Exception: " + ioe.getMessage());
             throw ioe;
@@ -166,10 +168,10 @@ public class Config {
     private String getConfigFromEnv(String name, String envitem, String value) throws IllegalArgumentException {
         String retval = null;
         if (value == null || value.equals("")) {
-            if (envitem != null && !envitem.equals("")) { 
-                Map <String, String> map = System.getenv();
-                for ( Map.Entry <String, String> entry: map.entrySet() ) {
-                    if ( entry.getKey().compareTo(envitem) == 0 ) {
+            if (envitem != null && !envitem.equals("")) {
+                Map<String, String> map = System.getenv();
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    if (entry.getKey().compareTo(envitem) == 0) {
                         retval = entry.getValue();
                         break;
                     }
@@ -178,13 +180,12 @@ public class Config {
         } else {
             retval = value;
         }
- 
+
         if (retval == null || retval.equals("")) {
-            throw new IllegalArgumentException ("Specified parameter" + name + " is null or empty.");
+            throw new IllegalArgumentException("Specified parameter" + name + " is null or empty.");
         }
 
         return retval;
     }
 
 }
-

@@ -83,30 +83,31 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Configuration</li>
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Configuration</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
   <hr/>
 </div>
-
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
                 <h1 id="connector-configuration">Connector Configuration<a class="headerlink" href="#connector-configuration" title="Permanent link"></a></h1>
-<p>The configuration files are in <strong><InstallRoot>/volume/config</strong> directory. </p>
+<p>The configuration files are in <strong>&lt;InstallRoot&gt;/volume/config</strong> directory. </p>
 <p>The following configuration files need to be created to configure the connector:</p>
 <ul>
-<li><code>connection.json</code>: Contains connection related configuration items to connect to MAS and SCADA historian.</li>
+<li><code>connection.json</code>: Contains the connection related items to connect to MAS Monitor and SCADA historian.</li>
 <li><code>mapping.json</code>: Contains mapping configuration to map columns from mapping.csv file into device type, device id, dimensions and metrics, and transform data extracted data from SCADA historian and send to MAS.</li>
+<li><code>CSV file</code>: CSV file with the Tag Points data that is used by the <code>mapping.json</code> to map the assets and the data into MAS Monitor.</li>
 </ul>
 <h2 id="pre-requisite">Pre-requisite<a class="headerlink" href="#pre-requisite" title="Permanent link"></a></h2>
 <ul>
 <li>To create <code>connection.json</code> file, you need SCADA Historian and MAS connectivity URL and credentials. For details refer to corresponding sections.</li>
-<li>A CSV file with TAG Point data, typically exported from PI Builder, is needed to create mapping rules configuration file.</li>
+<li>The <code>CSV file</code> can be created using PI Builder or created manually following the expected format.</li>
 </ul>
 <h2 id="configuration-details">Configuration details:<a class="headerlink" href="#configuration-details" title="Permanent link"></a></h2>
-<p>For details on connection and mapping rules configuration items, refer to the following sections:</p>
+<p>For details on the format and content of each configuration file, refer to the following sections:</p>
 <ul>
 <li><a href="../connection/">Connection Configuration</a></li>
 <li><a href="../mapping/">Mapping Rules Configuration</a></li>

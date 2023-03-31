@@ -25,8 +25,8 @@
 # c:> powershell.exe -ExecutionPolicy Bypass .\bin\configTask.ps1
 #
 
-$InstallPath = "C:\ibm\masshc"
-$DataPath = "C:\ibm\masshc"
+$InstallPath = "C:\IBM\masshc"
+$DataPath = "C:\IBM\masshc"
 
 # Create Data dir
 Write-Host "Creating Data directory $DataPath"

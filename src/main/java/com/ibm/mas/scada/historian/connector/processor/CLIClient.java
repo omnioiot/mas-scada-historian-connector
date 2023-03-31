@@ -82,7 +82,7 @@ public class CLIClient {
             port = 4550;
             if (type.equals("alarm")) port = 4551;
         }
-        
+        System.out.println("Creating new client"); 
         CLIClient client = new CLIClient();
         client.run();
     }

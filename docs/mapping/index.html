@@ -85,32 +85,35 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Mapping Rules Configuration</li>
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Mapping Rules Configuration</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
   <hr/>
 </div>
-
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
                 <h1 id="mapping-rules-configuration">Mapping Rules Configuration<a class="headerlink" href="#mapping-rules-configuration" title="Permanent link"></a></h1>
 <p>In MAS Data Lake, the device data for different device types are stored in their own table. 
-The tables are named as <code>IOT_&lt;deviceType&gt;</code>. The configuration items that controls the transformation of
-extracted data from SCADA historian for a specific device type, are defined in mapping configuration file.<br />
+The tables are named as <code>IOT_&lt;deviceType&gt;</code>. The configuration items that control the transformation of
+extracted data from SCADA historian for a specific device type, are defined in <code>mapping.json</code>.<br />
 The location of this configuration file is <code>&lt;InstallRoot&gt;/volume/config/mapping.json</code>.</p>
 <h2 id="configuration-object">Configuration Object<a class="headerlink" href="#configuration-object" title="Permanent link"></a></h2>
 <p>Provide data configuration object in a json formated file:</p>
 <pre><code>{
     &quot;serviceName&quot;: &quot;String&quot;,
-    &quot;serviceType&quot;: &quot;String&quot;,
     &quot;description&quot;: &quot;String&quot;,
+    &quot;serviceType&quot;: &quot;String&quot;,
     &quot;csvFileName&quot;: &quot;String&quot;,
     &quot;deviceTypes&quot;: [
         {
             &quot;type&quot;: &quot;String&quot;,
             &quot;tagpathFilters&quot;: [
+                &quot;String&quot;
+            ],
+            &quot;discardFilters&quot;: [
                 &quot;String&quot;
             ]
         }
@@ -128,50 +131,98 @@ The location of this configuration file is <code>&lt;InstallRoot&gt;/volume/conf
        &quot;tagid&quot;: &quot;String&quot;,
        &quot;site&quot;: &quot;String&quot;,
        &quot;categories&quot;: &quot;String&quot;
-    }
+    },
+    &quot;mappingFormat&quot;: Integer,
+    &quot;createEntityType&quot;: Bool
 }
 </code></pre>
 <p>Where:</p>
 <ul>
-<li><code>serviceName</code>: Defines the name of the service for example PITest1</li>
-<li><code>csvFileName</code>: Name of the CSV file.</li>
-<li><code>deviceTypes</code>: Specifies device type and corresponding tagpath patterns.<ul>
-<li><code>type</code>: Specifies device type id.</li>
-<li><code>tagpathFilters</code>: Specifies list of tagpath patterns.</li>
+<li><code>serviceName</code>: Defines the name of the service.</li>
+<li><code>description</code>: Small description to identify the file.</li>
+<li><code>csvFileName</code>: Name of the CSV file stored in <code>&lt;InstallRoot&gt;/volume/config/</code> that contains the desired tags information.</li>
+<li><code>serviceType</code>: Type of service to be run. Can be <em>osipi</em> or <em>ignition</em>.</li>
+<li><code>deviceTypes</code>: Specifies device types and corresponding tagpath patterns.<ul>
+<li><code>type</code>: Specifies the device type name where the device will be created from.</li>
+<li><code>tagpathFilters</code>: List of tagpath patterns that indicate which tags are mapped into the specified device type.</li>
+<li><code>discardFilters</code>: List of tagpath patterns that inidicate which tags are <strong>NOT</strong> mapped into the specified device type.</li>
 </ul>
 </li>
 <li><code>metrics</code>: This object defines the mapping rule for device metrics data items.<ul>
-<li><code>name</code>: Column name in CSV file used to map metric "Name" </li>
+<li><code>name</code>: Column name in CSV file used to map metric "Name". </li>
 <li><code>value</code>: Metric value is extracted from PI Archive database at runtime. Set this to an empty string in this configuration object.</li>
-<li><code>unit</code>: Column name in CSV file used to map metric "Unit"</li>
-<li><code>type</code>: Column name in CSV file used to map metric "Type"</li>
-<li><code>label</code>: Column name in CSV file used to map metric "Label"</li>
-<li><code>decimalAccuracy</code>: Column name in CSV file used to map metric "Decimal Accuracy"</li>
+<li><code>unit</code>: Column name in CSV file used to map metric "Unit".</li>
+<li><code>type</code>: Column name in CSV file used to map metric "Type".</li>
+<li><code>label</code>: Column name in CSV file used to map metric "Label".</li>
+<li><code>decimalAccuracy</code>: Column name in CSV file used to map metric "Decimal Accuracy".</li>
 </ul>
 </li>
-<li><code>dimensions</code>: This object defines the mapping rule for device dimension data.
-    <strong> Required items: </strong><ul>
+<li><code>dimensions</code>: This object defines the mapping rule for device dimension data.<ul>
 <li><code>tagpath</code>: One or more column name(s) in the CSV file used to create "tag path"</li>
-<li><code>tagid</code>: Column name in the CSV file used to map "tag id"
-<strong> Add more dimension data mapping </strong></li>
+<li><code>tagid</code>: Column name in the CSV file used to map "tag id"</li>
 <li><code>site</code>: Column name in the CSV file used to map "site name".</li>
+<li><code>categories</code>: Column name in the CSV file used to map "Categories".</li>
 </ul>
 </li>
+<li><code>mappingFormat</code>: Decides how the tags are built from the CSV file. If set to <em>1</em> (Default), tagpath is can be created using different columns (use when CSV is exported from PI Builder), while if set to <em>2</em>, tagpaths need to be contained in a single column.</li>
+<li><code>createEntityType</code>: Whether or not to enable the creation of Entity types. Can be either <em>true</em> or <em>false</em> (Default).</li>
 </ul>
 <h2 id="sample-csv-file-pidemocsv-used-to-define-mappingjson-configuration-file">Sample CSV file (pidemo.csv) used to define mapping.json configuration file<a class="headerlink" href="#sample-csv-file-pidemocsv-used-to-define-mappingjson-configuration-file" title="Permanent link"></a></h2>
+<table>
+<thead>
+<tr>
+<th>Parent</th>
+<th>Name</th>
+<th>ObjecType</th>
+<th>Error</th>
+<th>UniqueID</th>
+<th>ParentUniqueID</th>
+<th>Description</th>
+<th>Categories</th>
+<th>AttributeDefaultUOM</th>
+<th>AttributeType</th>
+<th>AttributeValue</th>
+<th>AttributeDataReference</th>
+<th>AttributeDisplayDigits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DistillExample.4820Column</td>
+<td>Accumulator Level</td>
+<td>Attribute</td>
+<td></td>
+<td>5ef1040f-b6af-59f7-352c-0442281fb1f9</td>
+<td></td>
+<td>Liquid level in reflux accumulator</td>
+<td>Process Parameters</td>
+<td>%</td>
+<td>Double</td>
+<td></td>
+<td>PI Point</td>
+<td>-5</td>
+</tr>
+</tbody>
+</table>
+<p>Below is the textualized version of the table above. One can copy it to a csv file to obtain the example pidemo.csv file.</p>
 <pre><code>Parent,Name,ObjectType,Error,UniqueID,ParentUniqueID,Description,Categories,AttributeDefaultUOM,AttributeType,AttributeValue,AttributeDataReference,AttributeDisplayDigits
-DistillExample\4820Column,Accumulator Level,Attribute,,5ef1040f-b6af-59f7-352c-0442281fb1f9,9f8a3f5d-2d1b-11ec-98b3-06abac9454c4,Liquid level in reflux accumulator,Process Parameters;,%,Double,,PI Point,-5,,,
-...
+DistillExample.4820Column,Accumulator Level,Attribute,,5ef1040f-b6af-59f7-352c-0442281fb1f9,,Liquid level in reflux accumulator,Process Parameters,%,Double,,PI Point,-5
 </code></pre>
 <h2 id="sample-mappingjson-configuration-file-for">Sample <code>mapping.json</code> Configuration File for<a class="headerlink" href="#sample-mappingjson-configuration-file-for" title="Permanent link"></a></h2>
 <pre><code>{
     &quot;serviceName&quot;: &quot;Service1&quot;,
+    &quot;description&quot;: &quot;For example purposes&quot;
     &quot;csvFileName&quot;: &quot;pidemo.csv&quot;,
+    &quot;serviceType&quot;: &quot;osipi&quot;,
     &quot;deviceTypes&quot;: [
         {
             &quot;type&quot;: &quot;PIDemoType&quot;,
             &quot;tagpathFilters&quot;: [
                 &quot;DistillExample.*&quot;
+            ],
+            &quot;discardFilters&quot;:[
+                &quot;%Sacramento Plant%&quot;,
+                &quot;HydroExample.*&quot;
             ]
         }
     ],
@@ -188,14 +239,16 @@ DistillExample\4820Column,Accumulator Level,Attribute,,5ef1040f-b6af-59f7-352c-0
        &quot;tagid&quot;: &quot;${UniqueID}&quot;,
        &quot;site&quot;: &quot;IBMAustin&quot;,
        &quot;categories&quot;: &quot;${Categories}&quot;
-    }
+    },
+    &quot;mappingFormat&quot;: 1,
+    &quot;createEntityType&quot;: true
 }
 </code></pre>
 <p>NOTES:</p>
 <ul>
-<li>To map a column name specify the column name within curly brackets <code>{}</code>, For example "unit": "${AttributeDefaultUOM}. Column names are case sensitive. The "unit" in pidemo.csv example will map to "lb/h".</li>
-<li>You can use comma-separated list of column name(s) to map a metric or dimension data. For example "${Parent},${Name}"  mapping rule is used to specify tagpath. The tagpath in this example will map to "DistillExample\4820Column\Bottoms Flow". A back-slash <code>\</code> will be used as a field-separator.</li>
-<li>DO not use curly brackets <code>{}</code> to specify a fixed value. For example "site": "IBMAustin".</li>
+<li>To map a column name, specify the column name within curly brackets <code>{}</code>, For example "unit": "${AttributeDefaultUOM}. Column names are case sensitive. The "unit" in <code>pidemo.csv</code> example will map to <em>"lb/h"</em>.</li>
+<li>You can use comma-separated list of column name(s) to map a metric or dimension data. For example <code>"${Parent},${Name}"</code> mapping rule is used to specify tagpath. The tagpath in this example will map to "DistillExample.4820Column.Accumulator Level". A dot <code>.</code> will be used as a field-separator.</li>
+<li>DO not use curly brackets <code>{}</code> to specify a fixed value. For example <code>"site": "IBMAustin"</code>.</li>
 </ul>
               
             </div>

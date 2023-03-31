@@ -1,14 +1,12 @@
 # Installing MAS SCADA Historian Connector
 
-The installation process includes downloading the installationpackage from IBM Passport Advantage, 
+The installation process includes downloading the installation package from IBM Passport Advantage, 
 and completing the initial setup on an on-premise host system or in cloud. The on-premise host system
 or the cloud instance must have access to SCADA Historian.
 
-## Before you begin
+## System requirements
 
-Before you begin the connector installation, make sure that you complete the following tasks.
-
-### Check if your environment meets the system requirements
+Before you begin the connector installation, make sure that your system fulfills the following requirements.
 
 <ul>
   <li> The connector is tested on the following operating environments.
@@ -21,20 +19,23 @@ Before you begin the connector installation, make sure that you complete the fol
   <li> Java Runtime Environment: Java 11. Note that the connector installer will download and install OpenJDK 11 if it can not find Java 11 on the host system. </li>
 </ul>
 
-### MAS data connector installation steps
+## MAS data connector installation steps
 
-#### On Windows system:
+### On Windows system:
 
-You need Powershell on your Windows system. Powershell installation details: <br>
+You need Powershell on your Windows system. For information on how to install it, check: <br>
 [How to install Powershell on Windows](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-windows?view=powershell-7)?
 
-Use powershell command to download install script from GitHub project, in a temprary directory.
+Open a Powershell terminal with admin privileges and run the following commands to download the install script `install.ps1` from the connector repository to the desired directory, and run it.
 ```
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ibm-watson-iot/mas-scada-bulkingest/master/bin/install.ps1" -OutFile ".\install.ps1"
+% cd <desired_directory>
+% Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ibm-watson-iot/mas-scada-historian-connector/master/bin/install.ps1" -OutFile ".\install.ps1"
+% powershell.exe -ExecutionPolicy Bypass .\install.ps1
 ```
 
-To configure connector tasks, lauch a Command Propmt with admin priviledges and run the following commands:
+To configure connector tasks, run the following commands:
 ```
+% cd C:\ibm\masshc\bin\
 % powershell.exe -ExecutionPolicy Bypass .\configTask.ps1
 ```
 
@@ -42,26 +43,26 @@ To configure connector tasks, lauch a Command Propmt with admin priviledges and 
 
 Use one the following options to get the project source on your system:
 
-1. Use a Web browser to download zip file of the GitHub project in /tmp directory. Open a shell prompt and run the follwing commands:
+* Use a Web browser to download the Connector zip file from the GitHub repository and save it in the `/tmp` directory. To unzip it, open a shell prompt and run the following commands:
 ```
 $ cd /tmp
-$ unzip mas-scada-bulkingest-master.zip
+$ unzip mas-scada-historian-connector-master.zip
 ```
-2. Use curl command to download zip file of the GitHub project in /tmp directory
+* Open a shell prompt and use the following curl command to download the Connector zip file from the GitHub project into the `/tmp` directory and unzip it
 ```
-$ curl https://github.com/ibm-watson-iot/mas-scada-bulkingest/archive/master.zip -L -o /tmp/mas-scada-bulkingest-master.zip
+$ curl https://github.com/ibm-watson-iot/mas-scada-historian-connector/archive/master.zip -L -o /tmp/mas-scada-historian-connector-master.zip
 $ cd /tmp
-$ unzip mas-scada-bulkingest-master.zip
+$ unzip mas-scada-historian-connector-master.zip
 ```
-3. Use git command to clone the GitHub project
+* Use git command to clone the Connector GitHub repository into the `/tmp` directory:
 ```
 $ cd /tmp
-$ git clone https://github.com/ibm-watson-iot/mas-scada-bulkingest
+$ git clone https://github.com/ibm-watson-iot/mas-scada-historian-connector
 ```
 
 To install the connector, open a shell prompt, and run the install script:
 ```
-$ cd /tmp/mas-scada-bulkingest
+$ cd /tmp/mas-scada-historian-connector
 $ ./bin/install.sh
 ```
 

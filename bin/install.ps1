@@ -81,7 +81,12 @@ if(!(Test-Path $DataPath))
     New-Item -Path "$DataPath\volume\config" -ItemType Directory
     New-Item -Path "$DataPath\volume\data" -ItemType Directory
 }
-
+elseif(!(Test-Path "$DataPath\volume"))
+{
+    New-Item -Path "$DataPath\volume\logs" -ItemType Directory
+    New-Item -Path "$DataPath\volume\config" -ItemType Directory
+    New-Item -Path "$DataPath\volume\data" -ItemType Directory
+}
 
 # Set Environment variables
 [System.Environment]::SetEnvironmentVariable('IBM_SCADA_CONNECTOR_INSTALL_DIR', $InstallPath,[System.EnvironmentVariableTarget]::Machine)

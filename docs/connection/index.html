@@ -59,7 +59,7 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Connection Configuration</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#configuration-object">Configuration Object</a>
+    <li class="toctree-l2"><a class="reference internal" href="#connection-configuration-object">Connection Configuration Object</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#sample-connectionjson-configuration-file">Sample connection.json Configuration File</a>
     </li>
@@ -83,21 +83,19 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Connection Configuration</li>
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Connection Configuration</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
   <hr/>
 </div>
-
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
                 <h1 id="connection-configuration">Connection Configuration<a class="headerlink" href="#connection-configuration" title="Permanent link"></a></h1>
-<p>The <code>connection.json</code> is a JSON file that allows you to define the connection related 
-configuration item to connect to SCADA historian database and MAS. The location of this 
-file is <code>&lt;InstallRoot&gt;/ibm/masshc/volume/config/connection.json</code>. </p>
-<h2 id="configuration-object">Configuration Object<a class="headerlink" href="#configuration-object" title="Permanent link"></a></h2>
+<p>The <code>connection.json</code> is a JSON file that allows you to define the Connector connection-related items to connect to SCADA historian database and MAS. The location of this file is <code>&lt;InstallRoot&gt;/ibm/masshc/volume/config/connection.json</code>. </p>
+<h2 id="connection-configuration-object">Connection Configuration Object<a class="headerlink" href="#connection-configuration-object" title="Permanent link"></a></h2>
 <p>Provide connection configuration object in a json formated file:</p>
 <pre><code>{
     &quot;id&quot;: &quot;String&quot;,
@@ -111,7 +109,8 @@ file is <code>&lt;InstallRoot&gt;/ibm/masshc/volume/config/connection.json</code
         &quot;dbType&quot;: &quot;String&quot;,
         &quot;schema&quot;: &quot;String&quot;,
         &quot;database&quot;: &quot;String&quot;,
-        &quot;extractInterval&quot;: integer
+        &quot;extractInterval&quot;: Integer,
+        &quot;extractIntervalHistorical&quot;: Integer
     },
     &quot;iotp&quot;: {
         &quot;url&quot;: &quot;String&quot;,
@@ -125,44 +124,59 @@ file is <code>&lt;InstallRoot&gt;/ibm/masshc/volume/config/connection.json</code
         &quot;asHost&quot;: &quot;String&quot;,
         &quot;asKey&quot;: &quot;String&quot;,
         &quot;asToken&quot;: &quot;String&quot;,
-        &quot;asAPIVersion&quot;: integer
-    }
+        &quot;apiVersion&quot;: Integer,
+        &quot;publishProtocol&quot;: &quot;String&quot;,
+        &quot;trustServerCert&quot;: Integer,
+        &quot;mamUserEmail&quot;: &quot;String&quot;,
+        &quot;publishProtocol&quot;: Integer,        
+        &quot;iotClientType&quot;: Integer
+    },
+    &quot;isSAASEnv&quot;: Integer,
 }
 </code></pre>
 <p>Where:</p>
 <ul>
-<li><code>id</code>: Description to identify the connection json file</li>
+<li><code>id</code>: Description to identify the connection json file. It's also the name of the cache file being created in <code>&lt;InstallRoot&gt;/ibm/masshc/volume/data/tagcache</code> by the connector.</li>
 <li><code>historian</code>: This configuration object is required. The configuration items specified in this object are used
 to connect to SCADA historian to extract device data and send to MAS Monitor.
     <strong> Required Items: </strong><ul>
 <li><code>type</code>: Historian type. The valid options are "osipi" or "ignition".</li>
-<li><code>jdbcUrl</code>: JDBC URL to connect to the historian database. Example "jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;"</li>
+<li><code>jdbcUrl</code>: JDBC URL to connect to the historian database. Example <em>"jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;"</em>.</li>
 <li><code>user</code>: User name to connect to historian.</li>
 <li><code>password</code>: Password to connect to historian.</li>
-<li><code>serverTimezone</code>: Timezone of historian database server. Example "American/Chicago"</li>
-<li><code>startDate</code>: Extract device data from the specified date. Valid format is "YYYY-MM-DD HH:MM:SS"
-<strong> Optional Items: </strong></li>
-<li><code>dbType</code>: Database server configured as SCADA hostorian. The default value is "pisql" (OSIPI historian)</li>
-<li><code>schema</code>: Schema name. The default value is "piarchive"</li>
-<li><code>database</code>: Database name. The default value is "picomp2"</li>
-<li><code>extractInterval</code>: Data from historian is extracted in chunk. The <code>extractInterval</code> specifies the time window in seconds for the chunk. The default value is 60 seconds. The valid range is 30 to 900 seconds.</li>
+<li><code>serverTimezone</code>: Timezone of historian database server. It needs to be a Time zone ID (Example <em>"American/Chicago"</em> or <em>"PST"</em>). Refer to <br> <a href="https://www.ibm.com/docs/en/was/9.0.5?topic=ctzs-time-zone-ids-that-can-be-specified-usertimezone-property">this document</a> for valid inputs.</li>
+<li><code>startDate</code>: Extract device data from the specified date. Valid format is <em>"YYYY-MM-DD HH:MM:SS"</em></li>
+<li><code>dbType</code>: Type of database server configured as SCADA hostorian. If not specified, database type is taken as MYSQL. Feasible values are <em>"pisql"</em> (OSIPI historian) or <em>mssql</em> (which defaults to MYSQL). </li>
+<li><code>schema</code>: Schema name. It is used to create the SQL query. <code>From &lt;schema&gt;.&lt;database&gt; where time ...</code>. Example for OSI PI: <em>"piarchive"</em>.</li>
+<li><code>database</code>: Database name. It is also used to create the SQL query. <code>From &lt;schema&gt;.&lt;database&gt; where time ...</code>. Example for OSI PI: <em>"picomp2"</em>.</li>
+<li><code>extractInterval</code>: Specifies the timewindow (in seconds) of each SQL query. The maximum and default value is <em>120</em>.</li>
+<li><code>extractIntervalHistorical</code>: Specifies the timewindow (in seconds) of each SQL query when historical data (past data) is requested. The default value is <em>1800</em>.</li>
 </ul>
 </li>
-<li><code>iotp</code>: This configuration object is required. The configuration items are used to configure MAS and send device data to MAS. To configure <code>iotp</code> object, you need credentials from MAS Monitor. You can get these information using MAS Monitor dashboard.
-    <strong> Required Items: </strong><ul>
-<li><code>url</code>: Specifies base URL to invoke APIs to configure MAS</li>
-<li><code>orgId</code>: Specifies a six character organization Id assigned to your IoT Platform service.</li>
-<li><code>host</code>: Specifies host to connect to MAS to send device data</li>
-<li><code>port</code>: Specifies port to connect to MAS </li>
-<li><code>apiKey</code>: Specifies API Key to configure device types, devices, interfaces and send MQTT messages.</li>
-<li><code>apiToken</code>: Specifies API Token to configure device types, devices, interfaces and send MQTT messages.</li>
-<li><code>schemaName</code>: Specifies the schema to configure dimensions</li>
-<li><code>tenantid</code>: Specifies tenant id.</li>
-<li><code>asHost</code>: Specifies host to configure dimensions</li>
-<li><code>asAPIVersion</code>: Specifies API Version. Valid options are 1 and 2.</li>
-<li><code>asKey</code>: Specifies API Key to configure dimensions</li>
-<li><code>asToken</code>: Specifies API Token to configure dimensions</li>
+<li>
+<p><code>iotp</code>: This configuration object is required and contains the essential information to configure the connector for connecting to MAS and send device data to it. To fill in this object, you need credentials from MAS Monitor API and IoT tool API.
+    <strong> Required Items: </strong></p>
+<ul>
+<li><code>url</code>: Specifies MAS Monitor IoT tool API URL used to configure MAS.</li>
+<li><code>orgId</code>: Specifies a six character organization Id assigned to your IoT Platform service. It is usually the first element in the <code>url</code> item.</li>
+<li><code>host</code>: Specifies IoT tool host for connecting to MAS to send device data.</li>
+<li><code>port</code>: Specifies port to connect to MAS.</li>
+<li><code>apiKey</code>: Specifies IoT tool API Key to configure device types, devices, interfaces and send MQTT messages.</li>
+<li><code>apiToken</code>: Specifies IoT tool API Token to configure device types, devices, interfaces and send MQTT messages.</li>
+<li><code>schemaName</code>: Specifies the database schema to configure dimensions.</li>
+<li><code>tenantId</code>: Specifies tenant ID.</li>
+<li><code>asHost</code>: Specifies MAS Monitor host to configure dimensions.</li>
+<li><code>asKey</code>: Specifies MAS Monitor API key to configure dimensions.</li>
+<li><code>asToken</code>: Specifies MAS Monitor API token to configure dimensions.</li>
+<li><code>apiVersion</code>: Specifies Monitor API version. Valid options are <em>1</em> and <em>2</em> (default).</li>
+<li><code>trustServerCert</code>: Specifies whether to trust all SSL certificates or not. If set to <em>1</em>, all certificates are trusted.</li>
+<li><code>mamUserEmail</code>: Email address used to create the REST client if <code>apiVersion</code> is set to <em>2</em> and <code>isSAASEnv</code> is set to <em>0</em>.</li>
+<li><code>publishProtocol</code>: Specifies the protocol/method used to publish. Default value is <em>"mqtt"</em>. Other valid values are <em>"kafka"</em> and <em>"dbupload"</em> but they are not currently supported.</li>
+<li><code>iotClientType</code>: Defines the IoT MQTT client type. Default value is <em>1</em> (Device Client), but it can also take <em>2</em> (Gateway client) or <em>3</em> (Application client). It affects the publisher.</li>
 </ul>
+</li>
+<li>
+<p><code>isSAASEnv</code>: Decides the initialization of te REST client. If set to <em>0</em>, REST client uses the Monitor API credentials, while for any other value it will use the IoT tool credentials.</p>
 </li>
 </ul>
 <h2 id="sample-connectionjson-configuration-file">Sample <code>connection.json</code> Configuration File<a class="headerlink" href="#sample-connectionjson-configuration-file" title="Permanent link"></a></h2>
@@ -174,7 +188,12 @@ to connect to SCADA historian to extract device data and send to MAS Monitor.
         &quot;user&quot;: &quot;Administrator&quot;,
         &quot;password&quot;: &quot;xxxxxxxxxx&quot;,
         &quot;serverTimezone&quot;: &quot;American/Chicago&quot;,
-        &quot;startDate&quot;: &quot;2021-12-05 05:00:00&quot;
+        &quot;startDate&quot;: &quot;2021-12-05 05:00:00&quot;,
+        &quot;dbType&quot;: &quot;pisql&quot;,
+        &quot;schema&quot;: &quot;piarchive&quot;,
+        &quot;database&quot;: &quot;picomp2&quot;,
+        &quot;extractInterval&quot;: 120,
+        &quot;extractIntervalHistorical&quot;: 1800
     },
     &quot;iotp&quot;: {
         &quot;url&quot;: &quot;https://tenant1.iot.monitordemo.ibmmam.com/api/v0002&quot;,
@@ -186,10 +205,15 @@ to connect to SCADA historian to extract device data and send to MAS Monitor.
         &quot;apiToken&quot;: &quot;cNyH_XXXXXX-p2ppVl&quot;,
         &quot;tenantId&quot;: &quot;tenant1&quot;,
         &quot;asHost&quot;: &quot;tenant1.api.monitor.monitordemo3.ibmmam.com&quot;,
-        &quot;asAPIVersion&quot;: 1,
         &quot;asKey&quot;: &quot;xxxxxxxxxxxxxxxxxx&quot;,
-        &quot;asToken&quot;: &quot;xxxxxxxxxxxxxxxxxxxx&quot;
-    }
+        &quot;asToken&quot;: &quot;xxxxxxxxxxxxxxxxxxxx&quot;,
+        &quot;apiVersion&quot;: 2,
+        &quot;trustServerCert&quot;: 1,
+        &quot;mamUserEmail&quot;: &quot;example@example.com&quot;,
+        &quot;publishProtocol&quot;: &quot;mqtt&quot;,
+        &quot;iotClientType&quot;: 1
+    },
+    &quot;isSAASEnv&quot;: 0
 }
 </code></pre>
               

@@ -33,11 +33,11 @@ public class OffsetRecord {
     private static String historianTimeZone;
     private static long startTimeSecs;
     private static long endTimeSecs;
-    private static long offsetInterval = 30L;
-    private static long offsetIntervalHistorical = 1800L;
-    private static int  month;
-    private static int  year;
-    private static int  day;
+    private static int offsetInterval = 120;
+    private static int offsetIntervalHistorical = 1800;
+    private static int month;
+    private static int year;
+    private static int day;
     private static String offsetFile;
     private static int status;
     private static AtomicLong processedCount = new AtomicLong(0);
@@ -55,13 +55,15 @@ public class OffsetRecord {
         this.startDate = historianConfig.getString("startDate");
         this.historianTimeZone = historianConfig.optString("serverTimezone", "America/Chicago");
         this.offsetId = config.getClientSite();
-        offsetInterval = historianConfig.optLong("extractInterval", 600L);
-        if (offsetInterval > 120) offsetInterval = 120;
-        offsetIntervalHistorical = historianConfig.optLong("extractIntervalHistorical", 1800L);
+        offsetInterval = historianConfig.optInt("extractInterval", 120);
+        if (offsetInterval > 120)
+            offsetInterval = 120;
+
+        offsetIntervalHistorical = historianConfig.optInt("extractIntervalHistorical", 1800);
 
         this.dataOffsetRecord = new OffsetRecordCache(offsetId, cache);
         if (newOffsetFile) {
-             dataOffsetRecord.update(offsetId,"");
+            dataOffsetRecord.update(offsetId, "");
         }
 
         readOffsetCache();
@@ -71,15 +73,15 @@ public class OffsetRecord {
     public long getStartTimeSecs() {
         return startTimeSecs;
     }
-        
+
     public long getEndTimeSecs() {
         return endTimeSecs;
     }
-        
+
     public int getMonth() {
         return month;
     }
-        
+
     public int getYear() {
         return year;
     }
@@ -95,7 +97,7 @@ public class OffsetRecord {
     public long getProcessedCount() {
         return processedCount.get();
     }
-        
+
     public long setUploadedCount(long count) {
         return uploadedCount.addAndGet(count);
     }
@@ -103,7 +105,7 @@ public class OffsetRecord {
     public long getUploadedCount() {
         return uploadedCount.get();
     }
-        
+
     public long setEntityCount(long count) {
         return entityCount.addAndGet(count);
     }
@@ -111,7 +113,7 @@ public class OffsetRecord {
     public long getEntityCount() {
         return entityCount.get();
     }
-        
+
     public long setEntityTypeCount(long count) {
         return entityTypeCount.addAndGet(count);
     }
@@ -119,9 +121,10 @@ public class OffsetRecord {
     public long getEntityTypeCount() {
         return entityTypeCount.get();
     }
-        
+
     public void setRate(long count) {
-        if (count == 0) return;
+        if (count == 0)
+            return;
         rate.set(count);
     }
 
@@ -157,8 +160,8 @@ public class OffsetRecord {
     /* for SCADA Historians other than OSIPI */
     public int updateOffsetData(long lastStartTimeSecs, long lastEndTimeSecs, int lastYear, int lastMonth, int status) {
         int retval = 0;
-        long curTimeMillis = System.currentTimeMillis();  
-        long curTimeSecs = curTimeMillis/1000;
+        long curTimeMillis = System.currentTimeMillis();
+        long curTimeSecs = curTimeMillis / 1000;
         cal.setTimeInMillis(curTimeMillis);
         int curYear = cal.get(Calendar.YEAR);
         int curMonth = cal.get(Calendar.MONTH) + 1; // Calendar base MONTH is 0
@@ -176,7 +179,8 @@ public class OffsetRecord {
             }
 
             if (lastYear > curYear) {
-                // start date in config is a future date or incorrect system date. can not proceed
+                // start date in config is a future date or incorrect system date. can not
+                // proceed
                 logger.severe("Future start date in config or incorrect system time. Can not proceed.");
                 logger.info("Reset start date to current date");
                 nextYear = curYear;
@@ -203,14 +207,13 @@ public class OffsetRecord {
             String offsetRecordStr = dataOffsetRecord.get(offsetId);
             ofrec = new JSONObject(offsetRecordStr);
             logger.info("OffsetRecord found: " + offsetRecordStr);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.info("OffsetRecord is not found. " + e.getMessage());
             createCache = 1;
         }
 
         if (ofrec != null) {
-            // update data 
+            // update data
             startTimeSecs = ofrec.getLong("startTimeSecs");
             if (startTimeSecs != 0) {
                 endTimeSecs = ofrec.getLong("endTimeSecs");
@@ -272,7 +275,8 @@ public class OffsetRecord {
             endTimeSecs = startTimeSecs + 10;
             try {
                 Thread.sleep(10000);
-            } catch(Exception e) {}
+            } catch (Exception e) {
+            }
         }
 
         updateOffsetCache();
@@ -295,4 +299,3 @@ public class OffsetRecord {
         logger.info("OffsetRecord: " + offsetRecordStr);
     }
 }
-

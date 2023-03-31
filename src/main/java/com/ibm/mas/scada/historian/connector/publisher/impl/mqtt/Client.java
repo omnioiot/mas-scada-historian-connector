@@ -82,24 +82,24 @@ public class Client implements MqttCallback {
         this.trustStore = iotpConfig.optString("trustStore", "");
         this.trustStorePwd = iotpConfig.optString("trustStorePassword", "");
         this.mqttHost = "ssl://" + host + ":" + port;
-        this.iotClientType= connectionConfig.optInt("iotClientType", Constants.DEVICE_CLIENT);
+        this.iotClientType = connectionConfig.optInt("iotClientType", Constants.DEVICE_CLIENT);
         this.mqttClientType = connectionConfig.optInt("mqttClientType", Constants.MQTT_SYNC);
         this.isConnected = false;
-        logger.info(String.format("MQTT host:%s trustSerer:%d", mqttHost, trustServerCert));
+        logger.info(String.format("MQTT host:%s trustServer:%d", mqttHost, trustServerCert));
     }
 
     public void connect(String type, String id) throws MqttException {
         try {
             isConnected = false;
-            MqttSubscription [] subs = new MqttSubscription[1];
+            MqttSubscription[] subs = new MqttSubscription[1];
             subs[0] = new MqttSubscription("iot-2/type/+/id/+/err/data", 2);
             opt = new MqttConnectionOptions();
             opt.setCleanStart(true);
             opt.setPassword(token.getBytes());
             if (trustServerCert == 1) {
-                SSLContext sc = SSLContext.getInstance("TLS"); 
-                sc.init(null, trustAllCerts, new java.security.SecureRandom()); 
-                SSLSocketFactory socketFactory = sc.getSocketFactory ();
+                SSLContext sc = SSLContext.getInstance("TLS");
+                sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                SSLSocketFactory socketFactory = sc.getSocketFactory();
                 opt.setSocketFactory(socketFactory);
             } else if (trustStore != null && !trustStore.equals("")) {
                 Properties sslClientProps = new Properties();
@@ -145,14 +145,14 @@ public class Client implements MqttCallback {
                 try {
                     subToken = connAsync.subscribe(subs);
                     subToken.waitForCompletion();
-                    int [] rc =  subToken.getGrantedQos();
+                    int[] rc = subToken.getGrantedQos();
                     logger.fine("MQTT Subscription granted QoS=" + ((rc != null && rc.length > 0) ? rc[0] : "null"));
                 } catch (Exception e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
                 }
                 isConnected = true;
             }
-        } catch (Exception e)  {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
@@ -186,7 +186,7 @@ public class Client implements MqttCallback {
                 connAsync.disconnect();
                 connAsync.close(true);
             }
-        } catch (Exception e)  {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
         isConnected = false;
@@ -216,30 +216,39 @@ public class Client implements MqttCallback {
     public void authPacketArrived(int reasonCode, MqttProperties properties) {
     }
 
-    private static TrustManager[] trustAllCerts = new TrustManager[]{
-        new X509TrustManager() {
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
+    private static TrustManager[] trustAllCerts = new TrustManager[] {
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(
+                        final java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkClientTrusted(
+                        final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type,
+                        final Socket a_socket) {
+                }
+
+                public void checkServerTrusted(
+                        final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type,
+                        final Socket a_socket) {
+                }
+
+                public void checkClientTrusted(
+                        final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type,
+                        final SSLEngine a_engine) {
+                }
+
+                public void checkServerTrusted(
+                        final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type,
+                        final SSLEngine a_engine) {
+                }
             }
-            public void checkClientTrusted(
-                final java.security.cert.X509Certificate[] certs, String authType) {
-            }
-            public void checkServerTrusted(
-                java.security.cert.X509Certificate[] certs, String authType) {
-            }
-            public void checkClientTrusted(
-                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final Socket a_socket) {
-            }
-            public void checkServerTrusted(
-                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final Socket a_socket) {
-            }
-            public void checkClientTrusted(
-                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final SSLEngine a_engine) {
-            }
-            public void checkServerTrusted(
-                final java.security.cert.X509Certificate[] a_certificates, final String a_auth_type, final SSLEngine a_engine) {
-            }
-        }
     };
 }
-

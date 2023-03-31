@@ -50,7 +50,8 @@ public class DataProvider {
     private static int sourceDBColumnCount = 0;
     private static long processedRowCount = 0;
 
-    public DataProvider (Config config, TagDataCache tc,  OffsetRecord offsetRecord, ArrayBlockingQueue<String[]> iotDataQueue) throws Exception {
+    public DataProvider(Config config, TagDataCache tc, OffsetRecord offsetRecord,
+            ArrayBlockingQueue<String[]> iotDataQueue) throws Exception {
         if (config == null || iotDataQueue == null || offsetRecord == null) {
             throw new NullPointerException("DataProvider: config or tc parameter cannot be null");
         }
@@ -74,12 +75,13 @@ public class DataProvider {
         String dbType = historian.getString("dbType");
         if (dbType.equals("mssql")) {
             this.type = Constants.DB_SOURCE_TYPE_MSSQL;
-        } if (dbType.equals("pisql")) {
+        }
+        if (dbType.equals("pisql")) {
             this.type = Constants.DB_SOURCE_TYPE_PISQL;
         } else {
             this.type = Constants.DB_SOURCE_TYPE_MYSQL;
         }
-    }    
+    }
 
     /* Extract data from historian */
     public long extract() throws Exception {
@@ -102,8 +104,8 @@ public class DataProvider {
 
         processedRowCount = 0;
 
-        logger.info(String.format("StartTime:%d EndTime:%d Year:%d Month:%d currTime:%d", 
-            startTimeSecs, endTimeSecs, year, month, (cycleStartTimeMillis/1000)));
+        logger.info(String.format("StartTime:%d EndTime:%d Year:%d Month:%d currTime:%d",
+                startTimeSecs, endTimeSecs, year, month, (cycleStartTimeMillis / 1000)));
 
         String querySql = getDBSql(startTimeMilli, endTimeMilli);
         logger.info("Extract SQL: " + querySql);
@@ -118,7 +120,7 @@ public class DataProvider {
         } catch (Exception qex) {
             gotData = 0;
             if (qex instanceof SQLException) {
-                int errCode = ((SQLException)qex).getErrorCode();
+                int errCode = ((SQLException) qex).getErrorCode();
                 logger.info(String.format("SQLException errCode=%d message=%s", errCode, qex.getMessage()));
                 if (errCode == 1146) {
                     /* pisql - table doesn't exist. Connector cannot work. FATAL error */
@@ -145,35 +147,40 @@ public class DataProvider {
                 logger.info(String.format("Number of columns in the source DB table: %d", sourceDBColumnCount));
                 for (int i = 1; i <= sourceDBColumnCount; i++) {
                     String colName = rsmd.getColumnName(i);
+                    logger.info("Column name: " + colName);
                     sourceDBColumnNames.add(colName);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             resetDBConnection(stmt, rs, conn);
             return waitTime;
         }
-   
+
         /* Set extracted data in processing queue */
         long currentTotalCount = 0;
         try {
             processedRowCount = setIotDataQueue(rs, iotDataQueue);
             currentTotalCount = offsetRecord.setProcessedCount(processedRowCount);
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.log(Level.INFO, e.getMessage(), e);
-        } 
- 
-        logger.info(String.format("Extraction process stats: current=%d total=%d", processedRowCount, currentTotalCount));
+        }
 
-        if (rs != null) rs.close();
-        if (stmt != null) stmt.close();
-        if (conn != null) conn.close();
+        logger.info(
+                String.format("Extraction process stats: current=%d total=%d", processedRowCount, currentTotalCount));
+
+        if (rs != null)
+            rs.close();
+        if (stmt != null)
+            stmt.close();
+        if (conn != null)
+            conn.close();
 
         /* update times for extractions */
         int waitFlag = offsetRecord.updateOffsetData(endTimeSecs);
         waitTime = offsetRecord.getWaitTimeMilli(waitFlag, cycleStartTimeMillis);
         if (processedRowCount == 0) {
             logger.info(String.format("No Data extracted: currCount=%d waitTimeMilli=%d entities=%d\n",
-                currentTotalCount, waitTime, offsetRecord.getEntityCount()));
+                    currentTotalCount, waitTime, offsetRecord.getEntityCount()));
         } else {
             cycleEndTimeMillis = System.currentTimeMillis();
             long timeDiff = (cycleEndTimeMillis - cycleStartTimeMillis);
@@ -192,21 +199,21 @@ public class DataProvider {
         Connection conn = null;
         while (conn == null) {
             try {
-                if ( type == Constants.DB_SOURCE_TYPE_PISQL ) {
+                if (type == Constants.DB_SOURCE_TYPE_PISQL) {
                     String driver = "com.osisoft.jdbc.Driver";
                     Properties plist = new Properties();
                     plist.put("user", dbUser);
-                    plist.put("password", dbPass);  
-                    // Class.forName(driver).newInstance();    
-                    Class.forName(driver).getDeclaredConstructor().newInstance();    
-                    conn = DriverManager.getConnection(sourceJDBCUrl,plist);
-                } else if ( type == Constants.DB_SOURCE_TYPE_MYSQL ) {
+                    plist.put("password", dbPass);
+                    // Class.forName(driver).newInstance();
+                    Class.forName(driver).getDeclaredConstructor().newInstance();
+                    conn = DriverManager.getConnection(sourceJDBCUrl, plist);
+                } else if (type == Constants.DB_SOURCE_TYPE_MYSQL) {
                     conn = DriverManager.getConnection(sourceJDBCUrl, dbUser, dbPass);
                 } else {
                     conn = DriverManager.getConnection(sourceJDBCUrl);
                 }
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 logger.log(Level.INFO, e.getMessage(), e);
                 conn = null;
             }
@@ -214,7 +221,8 @@ public class DataProvider {
                 logger.info("Retry source DB connection after 5 seconds.");
                 try {
                     Thread.sleep(5000);
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
             }
         }
 
@@ -236,24 +244,29 @@ public class DataProvider {
 
             try {
                 td = tc.get(tagid);
-            } catch(Exception e) { }
+            } catch (Exception e) {
+            }
             if (td == null) {
                 logger.warning("Tagid is not in cache: " + tagid);
                 continue;
             }
 
-            // System.out.println(String.format("tagId=%s tagPath=%s value=%s", tagid, td.getTagPath(), value));
+            // System.out.println(String.format("tagId=%s tagPath=%s value=%s", tagid,
+            // td.getTagPath(), value));
 
             String evtts = rs.getString("time");
             String tmString = td.getMetrics();
             JSONObject tm = new JSONObject(tmString);
-            String [] iotData = new String[Constants.IOTP_OSIPI_TOTAL];
+            String[] iotData = new String[Constants.IOTP_OSIPI_TOTAL];
             iotData[Constants.IOTP_OSIPI_DEVICETYPE] = td.getDeviceType();
             iotData[Constants.IOTP_OSIPI_DEVICEID] = td.getDeviceId();
             iotData[Constants.IOTP_OSIPI_EVT_NAME] = "scadaevent";
-            iotData[Constants.IOTP_OSIPI_EVT_TIMESTAMP] = evtts.replace(' ', 'T') + "Z";
+            // Some testing on TIMESTAMP FORMAT
+            // iotData[Constants.IOTP_OSIPI_EVT_TIMESTAMP] = evtts.replace(' ', 'T') + "Z";
+            String evtts_mas = evtts.substring(0, evtts.lastIndexOf('.'));
+            iotData[Constants.IOTP_OSIPI_EVT_TIMESTAMP] = evtts_mas.replace(' ', 'T') + "Z";
             iotData[Constants.IOTP_OSIPI_VALUE] = value;
-            iotData[Constants.IOTP_OSIPI_DECIMALACCURACY] = tm.getString("decimalAccuracy"); 
+            iotData[Constants.IOTP_OSIPI_DECIMALACCURACY] = tm.getString("decimalAccuracy");
             iotData[Constants.IOTP_OSIPI_NAME] = tm.getString("name");
             iotData[Constants.IOTP_OSIPI_LABEL] = tm.getString("label");
             iotData[Constants.IOTP_OSIPI_TYPE] = tm.getString("type");
@@ -270,12 +283,16 @@ public class DataProvider {
     }
 
     private static void resetDBConnection(Statement stmt, ResultSet rs, Connection conn) throws Exception {
-        if (stmt != null) stmt.close();
-        if (rs != null) rs.close();
-        if (conn != null) conn.close();
+        if (stmt != null)
+            stmt.close();
+        if (rs != null)
+            rs.close();
+        if (conn != null)
+            conn.close();
         try {
             Thread.sleep(50);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     private static String getDBSql(long startMilli, long endMilli) {
@@ -287,7 +304,7 @@ public class DataProvider {
             String sDateStr = df.format(sDate);
             String eDateStr = df.format(eDate);
             sqlStr = String.format(sqlQueryTemplate, sDateStr, eDateStr);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -295,4 +312,3 @@ public class DataProvider {
     }
 
 }
-

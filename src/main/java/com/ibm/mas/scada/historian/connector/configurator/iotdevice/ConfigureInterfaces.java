@@ -21,7 +21,7 @@ import com.ibm.mas.scada.historian.connector.configurator.iotdevice.LogicalInter
 import com.ibm.mas.scada.historian.connector.utils.Copyright;
 import com.ibm.mas.scada.historian.connector.utils.Constants;
 
-public class  ConfigureInterfaces {
+public class ConfigureInterfaces {
 
     public static final String COPYRIGHT = Copyright.COPYRIGHT;
     private static Logger logger = Logger.getLogger(Constants.LOGGER_CLASS);
@@ -74,7 +74,8 @@ public class  ConfigureInterfaces {
                 String piId = pi.getId();
                 logger.info("Type: " + deviceType + " Physical Interface Id: " + piId);
 
-                String evtType = "EventA";
+                // String evtType = "EventA";
+                String evtType = "scadaevent";
                 EventType eventType = iotp.createEventType(evtType, piSchemaId);
                 String evtId = eventType.getId();
                 logger.info("Type: " + deviceType + " Event Id: " + piId);
@@ -116,7 +117,7 @@ public class  ConfigureInterfaces {
                     mapping.put("tag", "$exists($event.tag) ? $event.tag: null");
                 }
 
-                Map<String,  Map<String,String>> eventMappings =  new HashMap<String,  Map<String,String>>();
+                Map<String, Map<String, String>> eventMappings = new HashMap<String, Map<String, String>>();
                 eventMappings.put(evtType, mapping);
 
                 logger.info("Type: " + deviceType + " Add mappings");
@@ -124,10 +125,9 @@ public class  ConfigureInterfaces {
             } else {
                 logger.info(String.format("Logical Interface: Name=%s DeviceType=%s", li.getName(), deviceType));
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.info("Exception message: " + e.getMessage());
             throw e;
         }
     }
 }
-

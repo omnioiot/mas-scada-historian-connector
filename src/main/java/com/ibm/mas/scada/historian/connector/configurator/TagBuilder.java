@@ -50,10 +50,10 @@ public class TagBuilder {
     private static int scadaType;
     private static String clientSite;
 
-    public TagBuilder (Config config, Cache cache) throws Exception {
+    public TagBuilder(Config config, Cache cache) throws Exception {
         super();
         if (config == null || cache == null) {
-            throw new IllegalArgumentException ("Specified parameter is null.");
+            throw new IllegalArgumentException("Specified parameter is null.");
         }
         this.config = config;
         this.logger = config.getLogger();
@@ -75,7 +75,7 @@ public class TagBuilder {
         this.clientSite = config.getClientSite();
     }
 
-    public void build () {
+    public void build() {
         if (mappingFormat == Constants.MAPPING_PIBUILDER) {
             build_forPibuilderCSV();
         } else {
@@ -96,32 +96,33 @@ public class TagBuilder {
             String metricValue = metrics.getString(metricNames[j]);
             metricCSVColNames[j] = getColumnName(metricValue);
         }
-            
+
         for (j = 0; j < dimensionNames.length; j++) {
             String dimensionValue = dimensions.getString(dimensionNames[j]);
             dimensionCSVColNames[j] = getColumnName(dimensionValue);
         }
-            
+
         try {
-            /* For each tagType in tagTypes list:
-             *  - extract tagpath column data from CSV
-             *  - check if tagpath belongs to this tagType
-             *  - build tagData and add to tagpath and tagid cache
+            /*
+             * For each tagType in tagTypes list:
+             * - extract tagpath column data from CSV
+             * - check if tagpath belongs to this tagType
+             * - build tagData and add to tagpath and tagid cache
              */
             for (int i = 0; i < tagTypes.size(); i++) {
                 TagDeviceType tagType = tagTypes.get(i);
                 String type = tagType.getType();
                 logger.info("Parse CSV file to build Tags for DeviceType: " + type);
                 int total = 0, processed = 0;
-            
+
                 String csvFilePath = configDir + "/" + csvFileName;
                 Reader reader = Files.newBufferedReader(Paths.get(csvFilePath), StandardCharsets.ISO_8859_1);
                 CSVFormat format = CSVFormat.Builder.create(CSVFormat.DEFAULT)
-                    .setHeader()
-                    .setSkipHeaderRecord(true)
-                    .setAllowMissingColumnNames(true)
-                    .setIgnoreEmptyLines(true)
-                    .build();
+                        .setHeader()
+                        .setSkipHeaderRecord(true)
+                        .setAllowMissingColumnNames(true)
+                        .setIgnoreEmptyLines(true)
+                        .build();
 
                 CSVParser csvParser = new CSVParser(reader, format);
 
@@ -141,7 +142,7 @@ public class TagBuilder {
 
                     /* only process Attributes */
                     if ((scadaType == Constants.SCADA_OSIPI && objectType.equals("Attribute")) ||
-                        (scadaType == Constants.SCADA_IGNITION)) {
+                            (scadaType == Constants.SCADA_IGNITION)) {
 
                         tagpath = getValueFromCsvRecord(tagpathCols, true, csvRecord, tagpathMap).trim();
                         if (!tagType.verifyTagpath(tagpath)) {
@@ -154,6 +155,7 @@ public class TagBuilder {
                             tagData.setServiceName(serviceName);
                             tagData.setTagPath(tagpath);
                             tagData.setDeviceType(type);
+                            tagid = getValueFromCsvRecord(tagidCols, false, csvRecord, tagidMap).trim();
 
                             /* add metrics */
                             metricData = new JSONObject();
@@ -163,7 +165,7 @@ public class TagBuilder {
                                     metricData.put(metricNames[i], metrics.getString(metricNames[i]));
                                 } else {
                                     metricData.put(metricNames[i], csvRecord.get(csvColName));
-                                } 
+                                }
                             }
 
                             /* add dimensions */
@@ -175,9 +177,17 @@ public class TagBuilder {
                                     dimensionData.put(dimensionNames[i], dimensions.getString(dimensionNames[i]));
                                 } else {
                                     dimensionData.put(dimensionNames[i], csvRecord.get(csvColName));
-                                } 
+                                }
                             }
-                            continue;
+                            String dimensionDataString = dimensionData.toString();
+                            tagData.setDimensions(dimensionDataString);
+
+                            /* add Tag data in TagData cache */
+                            tc.put(tagid, tagData);
+
+                            processed += 1;
+
+                            logger.info(String.format("Device: type=%s id=%s tagpath=%s", type, tagid, tagpath));
 
                         } else if (attrDataRef.equals("String Builder")) {
                             if (tagData != null) {
@@ -201,7 +211,8 @@ public class TagBuilder {
                                     tagData.setDimensions(dimensionDataString);
 
                                     /* add Tag data in Tagid cache */
-                                    logger.info(String.format("New TagData: type=%s id=%s path=%s", type,tagid,tagpath));
+                                    logger.info(
+                                            String.format("New TagData: type=%s id=%s path=%s", type, tagid, tagpath));
                                     tc.put(tagid, tagData);
                                     processed += 1;
                                     tagData = null;
@@ -218,7 +229,7 @@ public class TagBuilder {
         }
     }
 
-    private void build_forCustomCSV () {
+    private void build_forCustomCSV() {
         int j;
 
         String[] tagpathCols = getColumnNames(1, tagpathMap);
@@ -232,33 +243,34 @@ public class TagBuilder {
             String metricValue = metrics.getString(metricNames[j]);
             metricCSVColNames[j] = getColumnName(metricValue);
         }
-            
+
         for (j = 0; j < dimensionNames.length; j++) {
             String dimensionValue = dimensions.getString(dimensionNames[j]);
             dimensionCSVColNames[j] = getColumnName(dimensionValue);
         }
-            
+
         try {
-            /* For each tagType in tagTypes list:
-             *  - extract tagpath column data from CSV
-             *  - check if tagpath belongs to this tagType
-             *  - build tagData and add to tagpath and tagid cache
+            /*
+             * For each tagType in tagTypes list:
+             * - extract tagpath column data from CSV
+             * - check if tagpath belongs to this tagType
+             * - build tagData and add to tagpath and tagid cache
              */
             for (int i = 0; i < tagTypes.size(); i++) {
                 TagDeviceType tagType = tagTypes.get(i);
                 String type = tagType.getType();
                 logger.info("Parse CSV file to build Tags for DeviceType: " + type);
                 int total = 0, processed = 0;
-            
+
                 String csvFilePath = configDir + "/" + csvFileName;
                 Reader reader = Files.newBufferedReader(Paths.get(csvFilePath), StandardCharsets.ISO_8859_1);
                 CSVFormat format = CSVFormat.Builder.create(CSVFormat.DEFAULT)
-                    .setHeader()
-                    .setSkipHeaderRecord(true)
-                    .build();
+                        .setHeader()
+                        .setSkipHeaderRecord(true)
+                        .build();
 
                 CSVParser csvParser = new CSVParser(reader, format);
-                   
+
                 for (CSVRecord csvRecord : csvParser) {
                     String tagpath;
                     String tagid;
@@ -272,7 +284,7 @@ public class TagBuilder {
 
                     /* only process Attributes */
                     if ((scadaType == Constants.SCADA_OSIPI && objectType.equals("Attribute")) ||
-                        (scadaType == Constants.SCADA_IGNITION)) {
+                            (scadaType == Constants.SCADA_IGNITION)) {
 
                         tagpath = getValueFromCsvRecord(tagpathCols, true, csvRecord, tagpathMap).trim();
 
@@ -312,7 +324,7 @@ public class TagBuilder {
                                     metricData.put(metricNames[i], metrics.getString(metricNames[i]));
                                 } else {
                                     metricData.put(metricNames[i], csvRecord.get(csvColName));
-                                } 
+                                }
                             }
                             String metricDataString = metricData.toString();
                             tagData.setMetrics(metricDataString);
@@ -326,7 +338,7 @@ public class TagBuilder {
                                 for (i = 0; i < dimensionNames.length; i++) {
                                     if (dimensionNames[i].equals("site")) {
                                         dimensionData.put("site", dimensions.getString(dimensionNames[i]));
-                                    } 
+                                    }
                                 }
                             } else {
                                 for (i = 2; i < dimensionNames.length; i++) {
@@ -335,14 +347,18 @@ public class TagBuilder {
                                         dimensionData.put(dimensionNames[i], dimensions.getString(dimensionNames[i]));
                                     } else {
                                         dimensionData.put(dimensionNames[i], csvRecord.get(csvColName));
-                                    } 
+                                    }
                                 }
                             }
                             String dimensionDataString = dimensionData.toString();
                             tagData.setDimensions(dimensionDataString);
 
                             /* add Tag data in TagData cache */
-                            tc.put(idString, tagData);
+                            if (scadaType == Constants.SCADA_IGNITION) {
+                                tc.put(idString, tagData);
+                            } else {
+                                tc.put(tagid, tagData);
+                            }
 
                             processed += 1;
 
@@ -358,7 +374,6 @@ public class TagBuilder {
         }
     }
 
-
     public TagDataCache getTagDataCache() {
         return tc;
     }
@@ -372,22 +387,22 @@ public class TagBuilder {
         String[] columnNames = new String[cols];
         int columnNumber = 0;
         while (m.find()) {
-            columnNames[columnNumber] =  m.group(0).replace("{", "").replace("}", "");
+            columnNames[columnNumber] = m.group(0).replace("{", "").replace("}", "");
             columnNumber += 1;
         }
         return columnNames;
     }
 
-    private String getColumnName (String mapStr) {
+    private String getColumnName(String mapStr) {
         Matcher m = mapPattern.matcher(mapStr);
         while (m.find()) {
-            String columnName =  m.group(0).replace("{", "").replace("}", "");
+            String columnName = m.group(0).replace("{", "").replace("}", "");
             return columnName;
         }
         return null;
     }
 
-    private String getValueFromCsvRecord (String[] columnNames, boolean useSeparator, CSVRecord csvRecord, String dval) {
+    private String getValueFromCsvRecord(String[] columnNames, boolean useSeparator, CSVRecord csvRecord, String dval) {
         String value = "";
         if (columnNames.length == 0) {
             return dval;
@@ -404,9 +419,10 @@ public class TagBuilder {
                     value = value + csvRecord.get(colName);
                 }
             }
+
         }
+        logger.info("The tag value: " + value);
         return value;
     }
 
 }
-

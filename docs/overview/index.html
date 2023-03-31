@@ -81,33 +81,33 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Overview</li>
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Overview</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
   <hr/>
 </div>
-
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
                 <h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link"></a></h1>
 <p>IBM MAS SCADA Historian connector application performs the following tasks:</p>
 <ul>
-<li>Registers device types, physical and logical interfaces, device id, and dimensions from user defined tag mapping rules
- and asset CSV file.</li>
+<li>Registers the required information into MAS Monitor for device type and device creation, guided by
+the configuration files.</li>
 <li>Extracts tag data from SCADA historian.</li>
-<li>Transforms tag data into MQTT events and send events to MAS Monitor. The device events can be used by IBM MAS Monitor for visualizatiion and AI-driven analytics. </li>
+<li>Transforms tag data into MQTT events and send events to MAS Monitor. The device events can be used by IBM MAS Monitor for visualization and AI-driven analytics. </li>
 </ul>
 <p>Supported SCADA Historians:</p>
 <ul>
-<li>OSISOft data historian</li>
+<li>AVEVA PI historian (former OSIsoft PI historian)</li>
 <li>Ignition Historian</li>
 </ul>
 <h2 id="high-level-architecture">High-Level Architecture<a class="headerlink" href="#high-level-architecture" title="Permanent link"></a></h2>
 <p><img alt="MASHistorianConnector" src="../overview.png" /></p>
 <ol>
-<li>OSISOft data historian (PI Data Archive) stores sensor data collected from PLCs.</li>
+<li>AVEVA (former OSIsoft) data historian (PI Data Archive) stores sensor data collected from PLCs.</li>
 <li>MAS SCADA Historian connector extracts PI Point data from PI Data Archive.</li>
 <li>MAS SCADA Historian connector sends PI Point data to IBM MAS Monitor using MQTT protocol.</li>
 <li>MAS Monitor is used for PI Point data visualization and AI-driven analytics.</li>

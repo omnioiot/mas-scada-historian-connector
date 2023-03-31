@@ -7,7 +7,7 @@
         "port": 8883,
         "asHost": "api-xxxx.connectedproducts.internetofthings.ibmcloud.com",
         "apiKey": "a-xxxxxx-tavok0xsxt",
-        "apiToken": "cNyH_MNJ37A-p2ppVl",
+        "apiToken": "xxxxxxxxxxxxxx",
         "tenantId": "xxxx",
         "schemaName": "BLUADMIN"
     },
@@ -29,8 +29,7 @@
         "jdbcUrl": "jdbc:db2://xxxxx.com:50001/BLUDB:sslConnection=true;",
         "schema": "BLUADMIN",
         "database": "BLUDB",
-        "user": "bluadmin",
+        "user": "xxxxxxxx",
         "password": "xxxxxx"
-    } 
+    }
 }
-

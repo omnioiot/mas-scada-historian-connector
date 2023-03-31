@@ -25,7 +25,8 @@ import com.ibm.mas.scada.historian.connector.utils.Copyright;
 import com.ibm.mas.scada.historian.connector.utils.Constants;
 
 /**
- * An application to extract tag data from SCADA historian and send the data to IBM MAS Monitor.
+ * An application to extract tag data from SCADA historian and send the data to
+ * IBM MAS Monitor.
  */
 public final class Connector {
 
@@ -37,6 +38,7 @@ public final class Connector {
 
     /**
      * Mas SCADA Historian Connector.
+     * 
      * @param args The arguments of the program.
      */
     public static void main(String[] args) {
@@ -47,9 +49,10 @@ public final class Connector {
         String logDir;
         String userHome = System.getProperty("user.home");
         String os = System.getProperty("os.name");
-        int    connectorType = Constants.CONNECTOR_DEVICE;
+        int connectorType = Constants.CONNECTOR_DEVICE;
 
         System.out.println("IBM MAS Connector for SCADA Historian. OS: " + os);
+        System.out.println("This is the brand new version");
 
         if (args.length >= 3) {
             configDir = args[0];
@@ -70,22 +73,22 @@ public final class Connector {
             }
 
             /* Get install and data dir location from enviironment variables */
-            Map <String, String> map = System.getenv();
-            for ( Map.Entry <String, String> entry: map.entrySet() ) {
-                if ( entry.getKey().compareTo("IBM_SCADA_CONNECTOR_INSTALL_DIR") == 0 ) {
+            Map<String, String> map = System.getenv();
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                if (entry.getKey().compareTo("IBM_SCADA_CONNECTOR_INSTALL_DIR") == 0) {
                     installDir = entry.getValue();
-                } else if ( entry.getKey().compareTo("IBM_SCADA_CONNECTOR_DATA_VOLUME") == 0 ) {
+                } else if (entry.getKey().compareTo("IBM_SCADA_CONNECTOR_DATA_VOLUME") == 0) {
                     dataVolume = entry.getValue();
                 }
             }
-            if ( installDir == null ) {
+            if (installDir == null) {
                 if (os.contains("Windows") || os.contains("windows")) {
                     installDir = "c:/ibm/masshc";
                 } else {
                     installDir = userHome + "/ibm/masshc";
                 }
             }
-            if ( dataVolume == null ) {
+            if (dataVolume == null) {
                 if (os.contains("Windows") || os.contains("windows")) {
                     dataVolume = "c:/ibm/masshc";
                 } else {
@@ -93,7 +96,10 @@ public final class Connector {
                 }
             }
 
-            /* default config, data and log directories are in volume directory - to make it easy for docker env */
+            /*
+             * default config, data and log directories are in volume directory - to make it
+             * easy for docker env
+             */
             configDir = dataVolume + "/volume/config";
             dataDir = dataVolume + "/volume/data";
             logDir = dataVolume + "/volume/logs";
@@ -111,7 +117,7 @@ public final class Connector {
             tagBuilder.build();
             TagDataCache tc = tagBuilder.getTagDataCache();
             TagmapConfig tmc = tagBuilder.getTagmapConfig();
- 
+
             if (apiVersion == 1) {
                 logger.info("==== Configure types and devices in IoT =====");
                 TagConfigurator tagConfigurator = new TagConfigurator(config, tc, tmc);
@@ -122,20 +128,24 @@ public final class Connector {
                 tagDimension.startDimensionProcess();
                 try {
                     Thread.sleep(5000);
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                }
             }
 
             logger.info("==== Extract and process Historian data =====");
             ProcessManager pm = new ProcessManager(config, cache, tc);
             pm.processData();
 
-            /* If apiVersion is 1, then wait for some time for events to flow in database and entity type to 
+            /*
+             * If apiVersion is 1, then wait for some time for events to flow in database
+             * and entity type to
              * to get created, then start dimension creation thread
              */
             if (apiVersion == 1) {
                 try {
                     Thread.sleep(5000);
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                }
                 logger.info("==== Add dimensions data =====");
                 TagDimension tagDimension = new TagDimension(config, tc);
                 tagDimension.startDimensionProcess();
@@ -146,7 +156,8 @@ public final class Connector {
                 if (pm.getStatus()) {
                     try {
                         Thread.sleep(10000);
-                    } catch (Exception e) { }
+                    } catch (Exception e) {
+                    }
                     continue;
                 }
                 break;
@@ -164,4 +175,3 @@ public final class Connector {
         logger.info("Shutting down SCADA Historian connector.");
     }
 }
-
