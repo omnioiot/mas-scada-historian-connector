@@ -1,6 +1,6 @@
 # Connection Configuration
 
-The `connection.json` is a JSON file that allows you to define the connection related 
+The `connection.json` is a JSON file that allows you to define the connection-related 
 configuration item to connect to SCADA historian database and MAS. The location of this 
 file is `<InstallRoot>/ibm/masshc/volume/config/connection.json`. 
 
@@ -21,7 +21,8 @@ Provide connection configuration object in a json formated file:
         "dbType": "String",
         "schema": "String",
         "database": "String",
-        "extractInterval": integer
+        "extractInterval": long,
+        "extractIntervalHistorical": long
     },
     "iotp": {
         "url": "String",
@@ -33,16 +34,22 @@ Provide connection configuration object in a json formated file:
         "apiKey": "String",
         "apiToken": "String",
         "asHost": "String",
-        "asKey": "String",
-        "asToken": "String",
-        "asAPIVersion": integer
-    }
+        "X_API_KEY": "String",
+        "X_API_TOKEN": "String",
+        "publishProtocol": "String",
+        "iotClientType": integer,
+        "trustServerCert": integer,
+        "MAM_USER_EMAIL": "String"
+    },
+    "isSAASEnv": integer,
+    "cliPort": integer,
+    "httpPort": integer
 }
 ```
 
 Where:
 
-* `id`: Description to identify the connection json file
+* `id`: Description to identify the connection json file. It's also the name of the cache file being created in `<InstallRoot>/ibm/masshc/volume/data/tagcache`
 * `historian`: This configuration object is required. The configuration items specified in this object are used
 to connect to SCADA historian to extract device data and send to MAS Monitor.
     ** Required Items: **
@@ -53,8 +60,8 @@ to connect to SCADA historian to extract device data and send to MAS Monitor.
     * `serverTimezone`: Timezone of historian database server. Example "American/Chicago"
     * `startDate`: Extract device data from the specified date. Valid format is "YYYY-MM-DD HH:MM:SS"
     ** Optional Items: **
-    * `dbType`: Database server configured as SCADA hostorian. The default value is "pisql" (OSIPI historian)
-    * `schema`: Schema name. The default value is "piarchive"
+    * `dbType`: Database server configured as SCADA hostorian. If not specified, database type is taken as MYSQL. Feasible values are "pisql" (OSI PI historian) and "mssql" (which defaults to MYSQL). 
+    * `schema`: Schema name. It is used to create the SQL query. `From <schema>.<database> where time ...`. Typical value would be "piarchive".
     * `database`: Database name. The default value is "picomp2"
     * `extractInterval`: Data from historian is extracted in chunk. The `extractInterval` specifies the time window in seconds for the chunk. The default value is 60 seconds. The valid range is 30 to 900 seconds.
 * `iotp`: This configuration object is required. The configuration items are used to configure MAS and send device data to MAS. To configure `iotp` object, you need credentials from MAS Monitor. You can get these information using MAS Monitor dashboard.

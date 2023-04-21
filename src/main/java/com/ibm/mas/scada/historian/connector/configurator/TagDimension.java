@@ -73,7 +73,7 @@ public class TagDimension {
         String asEmail = iotp.getString("MAM_USER_EMAIL");
         this.apiVersion = config.getApiVersion();
         this.baseUrl = "https://" + iotp.getString("asHost");
-        this.tenantId = iotp.getString("TENANT_ID");
+        this.tenantId = iotp.getString("tenantId");
         if (config.isSAASEnv() == 0) {
             if (apiVersion == 2) {
                 this.restClient = new RestClient(baseUrl, Constants.AUTH_HEADER, asKey, asToken, asEmail, tenantId, 1);
@@ -359,7 +359,8 @@ public class TagDimension {
         dataItemDtoArray.put(createDataDtoObjectV2("SITE", "scadaevent", "LITERAL", "DIMENSION"));
         entityTypeObj.put("dataItemDto", dataItemDtoArray);
 
-        evtDtoArray.put(createEventDtoObjectV2("EventA", "evt_timestamp"));
+        // evtDtoArray.put(createEventDtoObjectV2("EventA", "evt_timestamp"));
+        evtDtoArray.put(createEventDtoObjectV2("scadaevent", "evt_timestamp"));
         entityTypeObj.put("eventDto", evtDtoArray);
         entityObj.put(entityTypeObj);
 
