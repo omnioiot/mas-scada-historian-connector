@@ -20,5 +20,5 @@ set IBM_SCADA_CONNECTOR_DATA_DIR=%MAS_SHC_HOME%
 
 set CP=%MAS_SHC_HOME%\jre\lib\*;%MAS_SHC_HOME%\lib\*
 
-%MAS_SHC_HOME%\jre\bin\java -classpath "%CP%" com.ibm.mas.scada.historian.connector.CLIClient "%1" "%2" "%3"
+%MAS_SHC_HOME%\jre\bin\java -classpath "%CP%" com.ibm.mas.scada.historian.connector.processor.CLIClient "%1" "%2" "%3"
 

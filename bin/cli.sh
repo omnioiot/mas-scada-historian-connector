@@ -26,5 +26,5 @@ export IBM_SCADA_CONNECTOR_DATA_DIR
 CP="${MAS_SHC_HOME}/jre/lib/*:${MAS_SHC_HOME}/lib/*"
 echo ${CP}
 
-${MAS_SHC_HOME}/jre/bin/java -classpath "${CP}" com.ibm.mas.scada.historian.connector.CLIClient "$@"
+${MAS_SHC_HOME}/jre/bin/java -classpath "${CP}" com.ibm.mas.scada.historian.connector.processor.CLIClient "$@"
 
