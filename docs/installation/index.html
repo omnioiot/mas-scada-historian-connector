@@ -114,17 +114,15 @@
 
               <h1 id="installing-mas-scada-historian-connector">Installing MAS SCADA Historian Connector<a
                   class="headerlink" href="#installing-mas-scada-historian-connector" title="Permanent link"></a></h1>
-              <p>The installation process includes downloading the installationpackage from IBM Passport Advantage,
+              <p>The installation process includes downloading the installation package from IBM Passport Advantage,
                 and completing the initial setup on an on-premise host system or in cloud. The on-premise host system
                 or the cloud instance must have access to SCADA Historian.</p>
-              <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin"
+              <h2 id="system-requirements">System requirements<a class="headerlink" href="#system-requirements"
                   title="Permanent link"></a></h2>
-              <p>Before you begin the connector installation, make sure that you complete the following tasks.</p>
-              <h3 id="check-if-your-environment-meets-the-system-requirements">Check if your environment meets the
-                system requirements<a class="headerlink" href="#check-if-your-environment-meets-the-system-requirements"
-                  title="Permanent link"></a></h3>
+              <p>Before you begin the connector installation, make sure that your system fulfills the following
+                requirements.</p>
               <ul>
-                <li> The connector is tested on the following operating environments.
+                <li> The connector is tested on the following operating systems.
                   <ul>
                     <li> Windows 2016 server or higher </li>
                     <li> Windows 10 </li>
@@ -138,42 +136,49 @@
                   OpenJDK 11 if it can not find Java 11 on the host system. </li>
               </ul>
 
-              <h3 id="mas-data-connector-installation-steps">MAS data connector installation steps<a class="headerlink"
-                  href="#mas-data-connector-installation-steps" title="Permanent link"></a></h3>
-              <h4 id="on-windows-system">On Windows system:<a class="headerlink" href="#on-windows-system"
-                  title="Permanent link"></a></h4>
-              <p>You need Powershell on your Windows system. Powershell installation details: <br>
+              <h2 id="mas-data-connector-installation-steps">MAS data connector installation steps<a class="headerlink"
+                  href="#mas-data-connector-installation-steps" title="Permanent link"></a></h2>
+              <h3 id="on-windows-system">On Windows system:<a class="headerlink" href="#on-windows-system"
+                  title="Permanent link"></a></h3>
+              <p>You need Powershell on your Windows system. For information on how to install it, check <br>
                 <a
                   href="https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-windows?view=powershell-7">How
                   to install Powershell on Windows</a>?
               </p>
-              <p>Use powershell command to download install script from GitHub project, in a temprary directory.</p>
-              <pre><code>Invoke-WebRequest -Uri &quot;https://raw.githubusercontent.com/ibm-watson-iot/mas-scada-historian-connector/master/bin/install.ps1&quot; -OutFile &quot;.\install.ps1&quot;
+              <p>Open a Powershell terminal with admin privileges and run the following commands to download the install
+                script <code>install.ps1</code> from the connector repository to the desired directory.</p>
+              <pre><code>% cd <var>desired-directory</var>
+                % Invoke-WebRequest -Uri &quot;https://raw.githubusercontent.com/ibm-watson-iot/mas-scada-historian-connector/master/bin/install.ps1&quot; -OutFile &quot;.\install.ps1&quot;
 </code></pre>
-              <p>To configure connector tasks, lauch a Command Propmt with admin priviledges and run the following
-                commands:</p>
-              <pre><code>% powershell.exe -ExecutionPolicy Bypass .\configTask.ps1
+              <p>To configure connector tasks, run the following commands:</p>
+              <pre><code>% cd C:\ibm\masshc\bin\
+                % powershell.exe -ExecutionPolicy Bypass .\configTask.ps1
 </code></pre>
               <h3 id="on-macos-or-linux-systems">On macOS or Linux systems<a class="headerlink"
                   href="#on-macos-or-linux-systems" title="Permanent link"></a></h3>
               <p>Use one the following options to get the project source on your system:</p>
-              <ol>
-                <li>Use a Web browser to download zip file of the GitHub project in /tmp directory. Open a shell prompt
-                  and run the follwing commands:</li>
-              </ol>
+              <ul>
+                <li>Use a Web browser to download the Connector zip file from the GitHub repository and save it in the
+                  <code>/tmp</code> directory.
+                <li>
+                <li>To unzip it, open a shell terminal and run the follwing commands:</li>
+              </ul>
               <pre><code>$ cd /tmp
 $ unzip mas-scada-historian-connector-master.zip
 </code></pre>
-              <ol>
-                <li>Use curl command to download zip file of the GitHub project in /tmp directory</li>
-              </ol>
+              <ul>
+                <li>Open a shell command and use the following curl command to download the Connector zip file from the
+                  GitHub project and save it in the
+                  <code>/tmp</code> directory:
+                </li>
+              </ul>
               <pre><code>$ curl https://github.com/ibm-watson-iot/mas-scada-historian-connector/archive/master.zip -L -o /tmp/mas-scada-historian-connector-master.zip
 $ cd /tmp
 $ unzip mas-scada-historian-connector-master.zip
 </code></pre>
-              <ol>
-                <li>Use git command to clone the GitHub project</li>
-              </ol>
+              <ul>
+                <li>Use git command to clone the Connector GitHub repository</li>
+              </ul>
               <pre><code>$ cd /tmp
 $ git clone https://github.com/ibm-watson-iot/mas-scada-historian-connector
 </code></pre>
