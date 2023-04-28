@@ -24,8 +24,8 @@
 # c:> powershell.exe -ExecutionPolicy Bypass .\bin\install.ps1
 #
 
-$InstallPath = "C:\IBM\masshc"
-$DataPath = "C:\IBM\masshc"
+$InstallPath = "C:\ibm\masshc"
+$DataPath = "C:\ibm\masshc"
 
 # Create installation directory
 Write-Host "Creating Installation directory $InstallPath"
