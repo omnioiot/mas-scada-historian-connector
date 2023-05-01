@@ -1,105 +1,113 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
+
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Connection Configuration - IBM Maximo Application Suite - SCADA Historian Connector</title>
-    <link rel="stylesheet" href="../css/theme.css" />
-    <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
-    
-      <script>
-        // Current page data
-        var mkdocs_page_name = "Connection Configuration";
-        var mkdocs_page_input_path = "connection.md";
-        var mkdocs_page_url = null;
-      </script>
-    
-    <script src="../js/jquery-3.6.0.min.js" defer></script>
-    <!--[if lt IE 9]>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="../img/favicon.ico" />
+  <title>Connection Configuration - IBM Maximo Application Suite - SCADA Historian Connector</title>
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Connection Configuration";
+    var mkdocs_page_input_path = "connection.md";
+    var mkdocs_page_url = null;
+  </script>
+
+  <script src="../js/jquery-3.6.0.min.js" defer></script>
+  <!--[if lt IE 9]>
       <script src="../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 
 <body class="wy-body-for-nav" role="document">
 
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
-      <div class="wy-side-nav-search">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
           <a href=".." class="icon icon-home"> IBM Maximo Application Suite - SCADA Historian Connector
-        </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
-  </form>
-</div>
-      </div>
+          </a>
+          <div role="search">
+            <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+              <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+            </form>
+          </div>
+        </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
-                </li>
-              </ul>
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+          <ul>
+            <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+            </li>
+          </ul>
+          <ul>
+            <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+            </li>
+          </ul>
+          <ul>
+            <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+            </li>
+          </ul>
+          <ul>
+            <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+            </li>
+          </ul>
+          <ul class="current">
+            <li class="toctree-l1 current"><a class="reference internal current" href="./">Connection Configuration</a>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Connection Configuration</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#configuration-object">Configuration Object</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#sample-connectionjson-configuration-file">Sample connection.json Configuration File</a>
-    </li>
-    </ul>
+                <li class="toctree-l2"><a class="reference internal" href="#configuration-object">Configuration
+                    Object</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal"
+                    href="#sample-connectionjson-configuration-file">Sample connection.json Configuration File</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../mapping/">Mapping Rules Configuration</a>
-                </li>
-              </ul>
+            </li>
+          </ul>
+          <ul>
+            <li class="toctree-l1"><a class="reference internal" href="../mapping/">Mapping Rules Configuration</a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
       <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="..">IBM Maximo Application Suite - SCADA Historian Connector</a>
-        
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">IBM Maximo Application Suite - SCADA Historian Connector</a>
+
       </nav>
       <div class="wy-nav-content">
-        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Connection Configuration</li>
-    <li class="wy-breadcrumbs-aside">
-    </li>
-  </ul>
-  <hr/>
-</div>
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ul class="wy-breadcrumbs">
+              <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+              <li>Connection Configuration</li>
+              <li class="wy-breadcrumbs-aside">
+              </li>
+            </ul>
+            <hr />
+          </div>
 
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
-              
-                <h1 id="connection-configuration">Connection Configuration<a class="headerlink" href="#connection-configuration" title="Permanent link"></a></h1>
-<p>The <code>connection.json</code> is a JSON file that allows you to define the connection related 
-configuration item to connect to SCADA historian database and MAS. The location of this 
-file is <code>&lt;InstallRoot&gt;/ibm/masshc/volume/config/connection.json</code>. </p>
-<h2 id="configuration-object">Configuration Object<a class="headerlink" href="#configuration-object" title="Permanent link"></a></h2>
-<p>Provide connection configuration object in a json formated file:</p>
-<pre><code>{
+
+              <h1 id="connection-configuration">Connection Configuration<a class="headerlink"
+                  href="#connection-configuration" title="Permanent link"></a></h1>
+              <p>The <code>connection.json</code> is a JSON file that allows you to define the Connector
+                connection-related items to connect to SCADA historian database and MAS. The location of this
+                file is <code>&lt;InstallRoot&gt;/ibm/masshc/volume/config/connection.json</code>. </p>
+              <h2 id="configuration-object">Connection Configuration Object<a class="headerlink"
+                  href="#configuration-object" title="Permanent link"></a></h2>
+              <p>Provide the connection configuration object in a json formated file:</p>
+              <pre><code>{
     &quot;id&quot;: &quot;String&quot;,
     &quot;historian&quot;: {
         &quot;type&quot;: &quot;String&quot;,
@@ -111,13 +119,14 @@ file is <code>&lt;InstallRoot&gt;/ibm/masshc/volume/config/connection.json</code
         &quot;dbType&quot;: &quot;String&quot;,
         &quot;schema&quot;: &quot;String&quot;,
         &quot;database&quot;: &quot;String&quot;,
-        &quot;extractInterval&quot;: integer
+        &quot;extractInterval&quot;: Integer,
+        &quot;extractIntervalHistorical&quot;: Integer
     },
     &quot;iotp&quot;: {
         &quot;url&quot;: &quot;String&quot;,
         &quot;orgId&quot;: &quot;String&quot;,
         &quot;host&quot;: &quot;String&quot;,
-        &quot;port&quot;: integer,
+        &quot;port&quot;: Integer,
         &quot;schemaName&quot;: &quot;String&quot;,
         &quot;tenantId&quot;: &quot;String&quot;,
         &quot;apiKey&quot;: &quot;String&quot;,
@@ -125,48 +134,102 @@ file is <code>&lt;InstallRoot&gt;/ibm/masshc/volume/config/connection.json</code
         &quot;asHost&quot;: &quot;String&quot;,
         &quot;asKey&quot;: &quot;String&quot;,
         &quot;asToken&quot;: &quot;String&quot;,
-        &quot;asAPIVersion&quot;: integer
-    }
+        &quot;apiVersion&quot;: Integer,
+        &quot;trustServerCert&quot;: Integer,
+        &quot;mamUserEmail&quot;: &quot;String&quot;,
+        &quot;publishProtocol&quot;: &quot;String&quot;,
+        &quot;iotClientType&quot;: Integer
+    },
+    &quot;isSAASEnv&quot;: Integer
 }
 </code></pre>
-<p>Where:</p>
-<ul>
-<li><code>id</code>: Description to identify the connection json file</li>
-<li><code>historian</code>: This configuration object is required. The configuration items specified in this object are used
-to connect to SCADA historian to extract device data and send to MAS Monitor.
-    <strong> Required Items: </strong><ul>
-<li><code>type</code>: Historian type. The valid options are "osipi" or "ignition".</li>
-<li><code>jdbcUrl</code>: JDBC URL to connect to the historian database. Example "jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;"</li>
-<li><code>user</code>: User name to connect to historian.</li>
-<li><code>password</code>: Password to connect to historian.</li>
-<li><code>serverTimezone</code>: Timezone of historian database server. Example "American/Chicago"</li>
-<li><code>startDate</code>: Extract device data from the specified date. Valid format is "YYYY-MM-DD HH:MM:SS"
-<strong> Optional Items: </strong></li>
-<li><code>dbType</code>: Database server configured as SCADA hostorian. The default value is "pisql" (OSIPI historian)</li>
-<li><code>schema</code>: Schema name. The default value is "piarchive"</li>
-<li><code>database</code>: Database name. The default value is "picomp2"</li>
-<li><code>extractInterval</code>: Data from historian is extracted in chunk. The <code>extractInterval</code> specifies the time window in seconds for the chunk. The default value is 60 seconds. The valid range is 30 to 900 seconds.</li>
-</ul>
-</li>
-<li><code>iotp</code>: This configuration object is required. The configuration items are used to configure MAS and send device data to MAS. To configure <code>iotp</code> object, you need credentials from MAS Monitor. You can get these information using MAS Monitor dashboard.
-    <strong> Required Items: </strong><ul>
-<li><code>url</code>: Specifies base URL to invoke APIs to configure MAS</li>
-<li><code>orgId</code>: Specifies a six character organization Id assigned to your IoT Platform service.</li>
-<li><code>host</code>: Specifies host to connect to MAS to send device data</li>
-<li><code>port</code>: Specifies port to connect to MAS </li>
-<li><code>apiKey</code>: Specifies API Key to configure device types, devices, interfaces and send MQTT messages.</li>
-<li><code>apiToken</code>: Specifies API Token to configure device types, devices, interfaces and send MQTT messages.</li>
-<li><code>schemaName</code>: Specifies the schema to configure dimensions</li>
-<li><code>tenantid</code>: Specifies tenant id.</li>
-<li><code>asHost</code>: Specifies host to configure dimensions</li>
-<li><code>asAPIVersion</code>: Specifies API Version. Valid options are 1 and 2.</li>
-<li><code>asKey</code>: Specifies API Key to configure dimensions</li>
-<li><code>asToken</code>: Specifies API Token to configure dimensions</li>
-</ul>
-</li>
-</ul>
-<h2 id="sample-connectionjson-configuration-file">Sample <code>connection.json</code> Configuration File<a class="headerlink" href="#sample-connectionjson-configuration-file" title="Permanent link"></a></h2>
-<pre><code>{
+              <p>Where:</p>
+              <ul>
+                <li><code>id</code>: Description to identify the connection json file. It is also the name of the cache
+                  file in <code>&lt;InstallRoot&gt;/ibm/masshc/volume/data/tagcache</code> that the connector uses (if
+                  it's not there the connector will create it)</li>
+                <li><code>historian</code>: This configuration object is required. The configuration items specified in
+                  this object are used
+                  to connect to SCADA historian to extract device data and send to MAS Monitor. It has the following
+                  <strong> Required Items: </strong>
+                  <ul>
+                    <li><code>type</code>: Historian type. The valid options are <code>"osipi"</code> or
+                      <code>"ignition"</code>.
+                    </li>
+                    <li><code>jdbcUrl</code>: JDBC URL to connect to the historian database. Example
+                      "jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;"</li>
+                    <li><code>user</code>: User name to connect to historian.</li>
+                    <li><code>password</code>: Password to connect to historian.</li>
+                    <li><code>serverTimezone</code>: Timezone of historian database server.
+                      Its needs to be a Time zone
+                      ID (i.e <code>"PST"</code> or <code>"America/Los_Angeles"</code> for example). Refer to <a
+                        href="https://www.ibm.com/docs/en/was/9.0.5?topic=ctzs-time-zone-ids-that-can-be-specified-usertimezone-property">this
+                        resource
+                      </a> for valid inputs.
+                    </li>
+                    <li><code>startDate</code>: Extract device data from the specified date. Valid format is <code>"YYYY-MM-DD
+                      HH:MM:SS"</code></li>
+                    <li><code>dbType</code>: Type of database server configured as SCADA historian. The default value is
+                      <code>"pisql"</code>
+                      (OSIPI historian). The other possibility is <code>"mssql"</code>(MicrosoftSQL).
+                    </li>
+                    <li><code>schema</code>: Schema name. Used to construct the SQL query (SELECT* FROM
+                      &lt;schema&gt;.&lt;database&gt;)</li>
+                    <li><code>database</code>: Database name. Used to construct the SQL query (SELECT* FROM
+                      &lt;schema&gt;.&lt;database&gt;)</li>
+                    <li><code>extractInterval</code>: Specifies the timewindow (in seconds) of each SQL query. The
+                      maximum and default value is 120s.
+                    </li>
+                    <li><code>extractIntervalHistorical</code>: Specifies the timewindow (in seconds) of each SQL query
+                      when historical data (past data) is requested. The default value is 1800s.
+                    </li>
+                  </ul>
+                </li>
+                <li><code>iotp</code>: This configuration object is required and contains the needed information to
+                  configure the connector for connecting to MAS and send device data to MAS. To configure
+                  <code>iotp</code> object, you need credentials
+                  from MAS Monitor API and IoT tool API. You can get these information using MAS Monitor dashboard.
+                  <strong> Required Items: </strong>
+                  <ul>
+                    <li><code>url</code>: Specifies MAS Monitor IoT tool API URL used to configure MAS Monitor.</li>
+                    <li><code>orgId</code>: Specifies a six-character organization Id assigned to your IoT Platform
+                      service. It is usually the first element in the <code>url</code> string.</li>
+                    <li><code>host</code>: Specifies IoT tool host to connect to MAS to send device data</li>
+                    <li><code>port</code>: Specifies port to connect to MAS.</li>
+                    <li><code>apiKey</code>: Specifies IoT tool API Key from to configure device types, devices,
+                      interfaces and send
+                      MQTT messages.</li>
+                    <li><code>apiToken</code>: Specifies IoT tool API Token to configure device types, devices,
+                      interfaces and
+                      send MQTT messages.</li>
+                    <li><code>schemaName</code>: Specifies the schema to configure dimensions.</li>
+                    <li><code>tenantId</code>: Specifies tenant id.</li>
+                    <li><code>asHost</code>: Specifies MAS Monitor host to configure dimensions.</li>
+                    <li><code>asKey</code>: Specifies Monitor API Key to configure dimensions.</li>
+                    <li><code>asToken</code>: Specifies Monitor API Token to configure dimensions.</li>
+                    <li><code>apiVersion</code>: Specifies Monitor API Version. Default and prefered value is
+                      <var>2</var>, but <var>1</var> is also a valid value.
+                    </li>
+                    <li><code>trustServerCert</code>: Specifies whether to trust all SSL certificates or not. If set to
+                      <var>1</var>, all certificates are trusted.
+                    </li>
+                    <li><code>mamUserEmail</code>: Email address used to creat the REST client if
+                      <code>apiVersion = 2</code> and <code>isSAASEnv = 0</code>
+                    </li>
+                    <li><code>publishProtocol</code>: Specifies the protocol/method used to publish the data. Set to
+                      <var>"mqtt"</var> (Default).
+                    </li>
+                    <li><code>iotClientType</code>: Defines the IoT MQTT client type. </li>
+                  </ul>
+                </li>
+                <li><code>isSAASEnv</code>: Decides the inicialization of the REST client. If set to <var>0</var>, REST
+                  client for Monitor API uses the <code>asKey/asToken</code> credentials. Else it will use the
+                  <code>apiKey/apiToken</code> credentials.
+                </li>
+              </ul>
+              <h2 id="sample-connectionjson-configuration-file">Sample <code>connection.json</code> Configuration File<a
+                  class="headerlink" href="#sample-connectionjson-configuration-file" title="Permanent link"></a></h2>
+              <pre><code>{
     &quot;id&quot;: &quot;Connection JSON file of ABC Corp.&quot;,
     &quot;historian&quot;: {
         &quot;type&quot;: &quot;osipi&quot;,
@@ -186,29 +249,38 @@ to connect to SCADA historian to extract device data and send to MAS Monitor.
         &quot;apiToken&quot;: &quot;cNyH_XXXXXX-p2ppVl&quot;,
         &quot;tenantId&quot;: &quot;tenant1&quot;,
         &quot;asHost&quot;: &quot;tenant1.api.monitor.monitordemo3.ibmmam.com&quot;,
-        &quot;asAPIVersion&quot;: 1,
+        &quot;asAPIVersion&quot;: 2,
         &quot;asKey&quot;: &quot;xxxxxxxxxxxxxxxxxx&quot;,
-        &quot;asToken&quot;: &quot;xxxxxxxxxxxxxxxxxxxx&quot;
+        &quot;asToken&quot;: &quot;xxxxxxxxxxxxxxxxxxxx&quot;,
+        &quot;trustServerCert&quot;: 1,
+        &quot;mamUserEmail&quot;: &quot;example@example.com&quot;,
+        &quot;publishProtocol&quot;: &quot;mqtt&quot;,
+        &quot;iotClientType&quot;: 1
     }
 }
 </code></pre>
-              
+
             </div>
-          </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../configuration/" class="btn btn-neutral float-left" title="Configuration"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../mapping/" class="btn btn-neutral float-right" title="Mapping Rules Configuration">Next <span class="icon icon-circle-arrow-right"></span></a>
-    </div>
+          </div>
+          <footer>
+            <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+              <a href="../configuration/" class="btn btn-neutral float-left" title="Configuration"><span
+                  class="icon icon-circle-arrow-left"></span> Previous</a>
+              <a href="../mapping/" class="btn btn-neutral float-right" title="Mapping Rules Configuration">Next <span
+                  class="icon icon-circle-arrow-right"></span></a>
+            </div>
 
-  <hr/>
+            <hr />
 
-  <div role="contentinfo">
-    <!-- Copyright etc -->
-  </div>
+            <div role="contentinfo">
+              <!-- Copyright etc -->
+            </div>
 
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-</footer>
-          
+            Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a
+              href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a
+              href="https://readthedocs.org">Read the Docs</a>.
+          </footer>
+
         </div>
       </div>
 
@@ -217,25 +289,26 @@ to connect to SCADA historian to extract device data and send to MAS Monitor.
   </div>
 
   <div class="rst-versions" role="note" aria-label="Versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    
-    
+    <span class="rst-current-version" data-toggle="rst-current-version">
+
+
       <span><a href="../configuration/" style="color: #fcfcfc">&laquo; Previous</a></span>
-    
-    
+
+
       <span><a href="../mapping/" style="color: #fcfcfc">Next &raquo;</a></span>
-    
-  </span>
-</div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme_extra.js" defer></script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        };
-    </script>
+
+    </span>
+  </div>
+  <script>var base_url = '..';</script>
+  <script src="../js/theme_extra.js" defer></script>
+  <script src="../js/theme.js" defer></script>
+  <script src="../search/main.js" defer></script>
+  <script defer>
+    window.onload = function () {
+      SphinxRtdTheme.Navigation.enable(true);
+    };
+  </script>
 
 </body>
+
 </html>

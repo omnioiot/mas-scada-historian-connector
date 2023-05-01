@@ -71,7 +71,7 @@ public class TagDimension {
         String asKey = iotp.getString("X_API_KEY");
         String asToken = iotp.getString("X_API_TOKEN");
         String asEmail = iotp.getString("MAM_USER_EMAIL");
-        this.apiVersion = config.getApiVersion();
+        this.apiVersion = iotp.optInt("apiVersion", 2);
         this.baseUrl = "https://" + iotp.getString("asHost");
         this.tenantId = iotp.getString("tenantId");
         if (config.isSAASEnv() == 0) {

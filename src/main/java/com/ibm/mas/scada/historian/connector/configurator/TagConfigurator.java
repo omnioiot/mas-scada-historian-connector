@@ -44,9 +44,9 @@ public class TagConfigurator {
     private static Set<String> tagList;
     private static int SAASEnv;
     private static int scadaType;
-    private static int apiVersion = 1;
+    private static int apiVersion = 2;
 
-    public TagConfigurator (Config config, TagDataCache tc, TagmapConfig tmc) {
+    public TagConfigurator(Config config, TagDataCache tc, TagmapConfig tmc) {
         super();
         this.config = config;
         this.logger = config.getLogger();
@@ -60,7 +60,7 @@ public class TagConfigurator {
         this.orgId = iotpConfig.getString("orgId");
         this.key = iotpConfig.getString("apiKey");
         this.token = iotpConfig.getString("apiToken");
-        this.apiVersion = config.getApiVersion();
+        this.apiVersion = iotpConfig.optInt("apiVersion", 2);
         this.baseUrl = iotpConfig.getString("url") + "/";
         this.url = iotpConfig.getString("url");
         this.tc = tc;
@@ -69,7 +69,7 @@ public class TagConfigurator {
         this.totalInCache = tagList.size();
     }
 
-    public void configure () throws Exception {
+    public void configure() throws Exception {
         int registeredNow = 0;
         int registeredBefore = 0;
 
@@ -77,14 +77,15 @@ public class TagConfigurator {
             logger.info("Use Monitor V2 API to create device type");
             return;
         }
- 
+
         try {
             RestClient restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token, 1);
 
-            /* For each tagType in tagTypes list:
-             *  - Create interfaces and device type
-             *  - Get tagList from cache
-             *  - For each tagpath in cache, create device
+            /*
+             * For each tagType in tagTypes list:
+             * - Create interfaces and device type
+             * - Get tagList from cache
+             * - For each tagpath in cache, create device
              */
             List<TagDeviceType> tagTypes = tmc.getTagTypes();
 
@@ -104,7 +105,8 @@ public class TagConfigurator {
                 } else if (respCode == 201) {
                     logger.info(String.format("Create DeviceType: %s - The device is created", type));
                 } else {
-                    String message = String.format("Failed to create DeviceType=%s Code=%d Message=%s", type, respCode, restClient.getResponseBody());
+                    String message = String.format("Failed to create DeviceType=%s Code=%d Message=%s", type, respCode,
+                            restClient.getResponseBody());
                     throw new ConnectorException(message);
                 }
 
@@ -120,11 +122,12 @@ public class TagConfigurator {
                 } else if (respCode == 201) {
                     logger.info(String.format("Create GatewayType: %s - The gateway is created", gwTypeId));
                 } else {
-                    String message = String.format("Failed to create GatewayType=%s Code=%d Message=%s", type, respCode, restClient.getResponseBody());
+                    String message = String.format("Failed to create GatewayType=%s Code=%d Message=%s", type, respCode,
+                            restClient.getResponseBody());
                     throw new ConnectorException(message);
                 }
 
-                try { 
+                try {
                     ConfigureInterfaces confIntf;
                     if (SAASEnv == 0) {
                         confIntf = new ConfigureInterfaces(scadaType, url, dataDir, orgId, key, token);
@@ -132,11 +135,11 @@ public class TagConfigurator {
                         confIntf = new ConfigureInterfaces(scadaType, dataDir, orgId, key, token);
                     }
                     confIntf.config(type);
- 
+
                     /* activate interface */
-                    String activateMethod = "draft/device/types/"+ type;
+                    String activateMethod = "draft/device/types/" + type;
                     JSONObject activateObject = new JSONObject();
-                    activateObject.put("operation","activate-configuration");
+                    activateObject.put("operation", "activate-configuration");
                     restClient.patch(activateMethod, activateObject.toString());
                     logger.info(String.format("ActivateInterface Status Code: %d", restClient.getResponseCode()));
                 } catch (Exception e) {
@@ -175,7 +178,7 @@ public class TagConfigurator {
                     JSONObject device = createDeviceItem(deviceType, deviceId, token);
                     byte[] bytes = device.toString().getBytes("UTF-8");
                     int deviceSizeBytes = bytes.length;
-                    if ((batchSizeBytes + deviceSizeBytes) > 512*1024) {
+                    if ((batchSizeBytes + deviceSizeBytes) > 512 * 1024) {
                         /* bulk register devices, reset batchSizeBytes and deviceObj */
                         int noRegistered = bulkDeviceAction(restClient, deviceObj, "add");
                         devicesRegistered += noRegistered;
@@ -196,26 +199,30 @@ public class TagConfigurator {
                     devicesRegistered += noRegistered;
                 }
 
-                logger.info(String.format("RegistrationStats: type=%s total=%d devicesRegistered=%d alreadyRegistered=%d", type, devicesInType, devicesRegistered, alreadyRegistered));
+                logger.info(
+                        String.format("RegistrationStats: type=%s total=%d devicesRegistered=%d alreadyRegistered=%d",
+                                type, devicesInType, devicesRegistered, alreadyRegistered));
 
                 registeredNow += devicesRegistered;
                 registeredBefore += alreadyRegistered;
             }
 
-            logger.info(String.format("RegistrationStats: TotalInCache=%d RegisteredNow=%d RegisteredBefore=%d", totalInCache, registeredNow, registeredBefore));
+            logger.info(String.format("RegistrationStats: TotalInCache=%d RegisteredNow=%d RegisteredBefore=%d",
+                    totalInCache, registeredNow, registeredBefore));
 
         } catch (Exception ioe) {
             throw ioe;
         }
     }
 
-    public void removeDevices (String removeType) {
+    public void removeDevices(String removeType) {
         int totalRemoved = 0;
 
         try {
             RestClient restClient = new RestClient(baseUrl, Constants.AUTH_BASIC, key, token, 1);
 
-            /* Remove all devices of the specified type.
+            /*
+             * Remove all devices of the specified type.
              * If type is null, remove all devices.
              */
             List<TagDeviceType> tagTypes = tmc.getTagTypes();
@@ -231,7 +238,7 @@ public class TagConfigurator {
                 Iterator<String> it = tagList.iterator();
                 batchCount = 0;
                 while (it.hasNext()) {
-                    if (batchCount == 0 ) {
+                    if (batchCount == 0) {
                         deviceObj = new JSONArray();
                         batchCount = 1;
                     }
@@ -248,7 +255,7 @@ public class TagConfigurator {
                     if (removeType != null && !type.equals(removeType)) {
                         totalDevices = totalDevices - 1;
                         continue;
-                    } 
+                    }
 
                     if (deviceType.equals("") || !type.equals(deviceType)) {
                         totalDevices = totalDevices - 1;
@@ -270,14 +277,15 @@ public class TagConfigurator {
                     totalDevices = totalDevices - 1;
                 }
                 if (deviceObj != null) {
-                    bulkDeviceAction (restClient, deviceObj, "remove");
+                    bulkDeviceAction(restClient, deviceObj, "remove");
                     deviceObj = null;
                 }
                 logger.info(String.format("TypeRemoveStats: type=%s devicesRemoved=%d", type, devicesRemoved));
                 totalRemoved += devicesRemoved;
             }
 
-            logger.info(String.format("DeviceRemoveStats: TotalInCache=%d DevicesRemoved=%d", totalInCache, totalRemoved));
+            logger.info(
+                    String.format("DeviceRemoveStats: TotalInCache=%d DevicesRemoved=%d", totalInCache, totalRemoved));
         } catch (Exception ioe) {
             logger.info("Failed to build tag cache. Exception: " + ioe.getMessage());
         }
@@ -312,19 +320,21 @@ public class TagConfigurator {
     private int bulkDeviceAction(RestClient restClient, JSONArray deviceObj, String actionType) {
         boolean done = true;
         int retVal = 0;
-        for (int retry=0; retry<5; retry++) {
+        for (int retry = 0; retry < 5; retry++) {
             done = true;
             try {
                 if (actionType.equals("remove")) {
                     restClient.post("bulk/devices/remove", deviceObj.toString());
                     JSONArray jsonArray = new JSONArray(restClient.getResponseBody());
                     retVal = jsonArray.length();
-                    // processRemoveResults(deviceObj, restClient.getResponseCode(), restClient.getResponseBody());
+                    // processRemoveResults(deviceObj, restClient.getResponseCode(),
+                    // restClient.getResponseBody());
                 } else {
                     restClient.post("bulk/devices/add", deviceObj.toString());
                     JSONArray jsonArray = new JSONArray(restClient.getResponseBody());
                     retVal = jsonArray.length();
-                    // processAddResults(deviceObj, restClient.getResponseCode(), restClient.getResponseBody());
+                    // processAddResults(deviceObj, restClient.getResponseCode(),
+                    // restClient.getResponseBody());
                 }
                 deviceObj = null;
             } catch (Exception ex) {
@@ -337,10 +347,10 @@ public class TagConfigurator {
             }
             try {
                 Thread.sleep(5000);
-            } catch (Exception e) { }
+            } catch (Exception e) {
+            }
             logger.info(String.format("Retry REST call: retry count=%d", retry));
         }
         return retVal;
     }
 }
-
