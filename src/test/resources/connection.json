@@ -14,7 +14,7 @@
     "historian": {
         "type": "ignition",
         "dbType": "pisql",
-        "jdbcUrl": "jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;",
+        "jdbcUrl": "jdbc:pisql://xxxxxx/Data Source=pidemo; Integrated Security=SSPI;",
         "schema": "piarchive",
         "database": "picomp2",
         "user": "Administrator",
@@ -26,11 +26,11 @@
     },
     "jdbc": {
         "dbType": "db2",
-        "jdbcUrl": "jdbc:db2://db2w-bklaiok.us-south.db2w.cloud.ibm.com:50001/BLUDB:sslConnection=true;",
+        "jdbcUrl": "jdbc:db2://xxxxx.com:50001/BLUDB:sslConnection=true;",
         "schema": "BLUADMIN",
         "database": "BLUDB",
         "user": "bluadmin",
-        "password": "g2XowurIc27fH43cG5Qi_BNabVf3@"
+        "password": "xxxxxx"
     } 
 }
 
