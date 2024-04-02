@@ -91,7 +91,7 @@ to connect to SCADA historian to extract device data and send to MAS Monitor.
     "id": "Connection JSON file of ABC Corp.",
     "historian": {
         "type": "osipi",
-        "jdbcUrl": "jdbc:pisql://10.208.72.125/Data Source=pidemo; Integrated Security=SSPI;",
+        "jdbcUrl": "jdbc:pioledb://mySQLDAS/Data Source=myPIServer; Integrated Security=SSPI;",
         "user": "Administrator",
         "password": "xxxxxxxxxx",
         "serverTimezone": "American/Chicago",

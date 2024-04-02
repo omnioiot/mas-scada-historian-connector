@@ -70,7 +70,7 @@ public class TagDimension {
         this.token = iotp.getString("apiToken");
         String asKey = iotp.getString("asKey");
         String asToken = iotp.getString("asToken");
-        String asEmail = iotp.getString("mamUserMail");
+        String asEmail = iotp.getString("mamUserEmail");
         this.apiVersion = iotp.optInt("apiVersion", 2);
         this.baseUrl = "https://" + iotp.getString("asHost");
         this.tenantId = iotp.getString("tenantId");

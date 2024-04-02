@@ -204,6 +204,7 @@ public class DataProvider {
                     Properties plist = new Properties();
                     plist.put("user", dbUser);
                     plist.put("password", dbPass);
+                    plist.put("TrustedConnection", "Yes");
                     // Class.forName(driver).newInstance();
                     Class.forName(driver).getDeclaredConstructor().newInstance();
                     conn = DriverManager.getConnection(sourceJDBCUrl, plist);
