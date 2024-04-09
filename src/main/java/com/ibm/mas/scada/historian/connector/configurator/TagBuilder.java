@@ -302,7 +302,25 @@ public class TagBuilder {
                                 td = tc.get(tagid);
                             }
                             if (td != null) {
-                                continue;
+                                /*
+                                 * check if device is already created for this tagid and its device type
+                                 * is the one we want the tag to be mapped to
+                                 * If YES, skip it
+                                 * If NO, remove it for it to be added again
+                                 */
+                                logger.info(String.format("Tag DeviceStatus is: %d", td.getDeviceStatus()));
+                                /* We should probably check also for the tag device type */
+                                if ((td.getDeviceStatus() == 1) && (td.getDeviceType() == type))
+                                    continue;
+                                else if (td.getDeviceType() != type) {
+                                    logger.info(String.format(
+                                            "Tag in cache is not linked to intended deviceType. Assigned device type: %s. Desired: %s",
+                                            type,
+                                            td.getDeviceType()));
+                                } else {
+                                    logger.info(String.format("Recreating Tag %s in cache", td.getDeviceId()));
+                                    tc.remove(tagid);
+                                }
                             }
 
                             TagData tagData = new TagData();
@@ -312,7 +330,15 @@ public class TagBuilder {
                                 String did = UUID.nameUUIDFromBytes(idString.getBytes()).toString();
                                 tagData.setDeviceId(did);
                             } else {
-                                tagData.setDeviceId(tagid);
+                                Pattern pattern = Pattern.compile("[^a-zA-Z0-9._-]");
+                                Matcher matcher = pattern.matcher(tagid);
+                                String tagidmodified = matcher.replaceAll("");
+                                /* if tagidmodified is greater */
+                                if (tagidmodified.length() > 36) {
+                                    tagidmodified = tagidmodified.substring(tagidmodified.length() - 36);
+                                }
+                                logger.info(String.format("Device ID is: %s", tagidmodified));
+                                tagData.setDeviceId(tagidmodified);
                             }
                             tagData.setDeviceType(type);
 

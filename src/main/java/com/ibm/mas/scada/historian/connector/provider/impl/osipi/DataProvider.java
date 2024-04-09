@@ -240,7 +240,8 @@ public class DataProvider {
 
             String tagpathAndId = rs.getString("tag");
             String value = rs.getString("value");
-            tagid = tagpathAndId.substring(tagpathAndId.lastIndexOf('.') + 1).trim();
+            // tagid = tagpathAndId.substring(tagpathAndId.lastIndexOf('.') + 1).trim();
+            tagid = tagpathAndId;
 
             try {
                 td = tc.get(tagid);
@@ -248,6 +249,10 @@ public class DataProvider {
             }
             if (td == null) {
                 /* logger.warning("Tagid is not in cache: " + tagid); */
+                continue;
+            }
+            if (td.getDeviceStatus() == 0) {
+                /* if device is not created in Monitor for the tagid, skip it */
                 continue;
             }
 

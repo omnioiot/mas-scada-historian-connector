@@ -371,6 +371,7 @@ public class TagDimension {
 
             if (httpCode != 200) {
                 logger.fine(String.format("EntityTypeObj: \n%s", entityTypeObj.toString()));
+                logger.info(String.format("EntityType POST Body: %s", restClient.getResponseBody()));
             } else {
                 JSONObject retObject = new JSONObject(restClient.getResponseBody());
                 uuid = retObject.getString("uuid");
@@ -459,8 +460,16 @@ public class TagDimension {
                     logger.fine("V2 Device Object: " + deviceObj.toString());
                     restClient.post(deviceAPI, deviceObj.toString());
                     logger.info(String.format("V2 Device create Status Code: %d", restClient.getResponseCode()));
-                    td.setDeviceStatus(1);
-                    tc.update(id, td);
+                    if (restClient.getResponseCode() == 200) {
+                        /*
+                         * Device linked to the tag was created.
+                         * Update DeviceStatus in cache for the tag
+                         */
+                        td.setDeviceStatus(1);
+                        tc.update(id, td);
+                    } else {
+                        logger.info(String.format("EntityType POST Body: %s", restClient.getResponseBody()));
+                    }
                 } catch (Exception ex) {
                     logger.info("V2 Device Create Exception message: " + ex.getMessage());
                     logger.log(Level.FINE, ex.getMessage(), ex);
@@ -483,7 +492,7 @@ public class TagDimension {
                 doneTags.add(id);
                 dimAdded += 1;
             } else {
-                logger.fine("Dimension was already added: tagpath: " + tagpath + "    Dimention ID: " + deviceId);
+                logger.fine("Dimension was already added: tagpath: " + tagpath + "    Dimension ID: " + deviceId);
                 dimRegistered += 1;
             }
 
