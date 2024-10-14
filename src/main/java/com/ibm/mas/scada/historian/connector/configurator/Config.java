@@ -39,7 +39,6 @@ public class Config {
     private static int scadaType = Constants.SCADA_OSIPI;
     private static int connectorType = Constants.CONNECTOR_DEVICE;
     private static int SAASEnv = 0;
-    private static int apiVersion = 2;
 
     public Config(String configPath, String dataPath, String logPath)
             throws IllegalArgumentException, IOException, Exception {
@@ -89,10 +88,6 @@ public class Config {
         return this.mappingConfig;
     }
 
-    public int getApiVersion() {
-        return this.apiVersion;
-    }
-
     public int getScadaType() {
         return scadaType;
     }
@@ -140,7 +135,6 @@ public class Config {
             }
             this.mappingConfig = new JSONObject(fileContent);
             JSONObject iotp = connectionConfig.getJSONObject("iotp");
-            this.apiVersion = iotp.optInt("apiVersion", 2);
         } catch (IOException ioe) {
             logger.info("Invalid configuration. Exception: " + ioe.getMessage());
             throw ioe;

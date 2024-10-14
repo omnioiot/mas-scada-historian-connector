@@ -12,12 +12,13 @@ plugins {
     id 'application'
 }
 
+
 compileJava {
     options.compilerArgs << '-Xlint:deprecation'
     options.compilerArgs << '-Xlint:unchecked'
 }
 
-version = '1.0.0'
+version = '2.0.0'
 
 repositories {
     mavenCentral()
@@ -62,4 +63,3 @@ application {
 test {
     useJUnit()
 }
-

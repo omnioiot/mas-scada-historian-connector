@@ -42,7 +42,7 @@ public class Client implements MqttCallback {
     private static String configDir;
     private static String dataDir;
     private static String key;
-    private static String token;
+    private static String devToken;
     private static String trustStore;
     private static String trustStorePwd;
     private static String mqttHost;
@@ -74,7 +74,7 @@ public class Client implements MqttCallback {
         JSONObject connectionConfig = config.getConnectionConfig();
         JSONObject iotpConfig = connectionConfig.getJSONObject("iotp");
         this.key = iotpConfig.getString("apiKey");
-        this.token = iotpConfig.getString("apiToken");
+        this.devToken = iotpConfig.getString("devToken");
         this.orgId = iotpConfig.getString("orgId");
         String host = iotpConfig.getString("host");
         String port = String.valueOf(iotpConfig.getInt("port"));
@@ -95,7 +95,7 @@ public class Client implements MqttCallback {
             subs[0] = new MqttSubscription("iot-2/type/+/id/+/err/data", 2);
             opt = new MqttConnectionOptions();
             opt.setCleanStart(true);
-            opt.setPassword(token.getBytes());
+            opt.setPassword(devToken.getBytes());
             if (trustServerCert == 1) {
                 SSLContext sc = SSLContext.getInstance("TLS");
                 sc.init(null, trustAllCerts, new java.security.SecureRandom());

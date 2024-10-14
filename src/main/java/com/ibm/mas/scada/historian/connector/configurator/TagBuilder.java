@@ -310,9 +310,9 @@ public class TagBuilder {
                                  */
                                 logger.info(String.format("Tag DeviceStatus is: %d", td.getDeviceStatus()));
                                 /* We should probably check also for the tag device type */
-                                if ((td.getDeviceStatus() == 1) && (td.getDeviceType() == type))
+                                if ((td.getDeviceStatus() == 1) && (td.getDeviceType().equals(type)))
                                     continue;
-                                else if (td.getDeviceType() != type) {
+                                else if (!td.getDeviceType().equals(type)) {
                                     logger.info(String.format(
                                             "Tag in cache is not linked to intended deviceType. Assigned device type: %s. Desired: %s",
                                             type,
