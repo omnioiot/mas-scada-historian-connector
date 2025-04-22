@@ -33,9 +33,9 @@ public class DateUtil {
     private TimeZone localTZ;
     private long timeMilli;
     private long timeSecs;
-    private int  month;
-    private int  year;
-    private int  day;
+    private int month;
+    private int year;
+    private int day;
 
     /**
      * DateUtil class.
@@ -44,10 +44,10 @@ public class DateUtil {
         if (localTZ != null) {
             this.localTZ = localTZ;
         } else {
-            localTZ = TimeZone.getDefault();
+            this.localTZ = TimeZone.getDefault();
         }
 
-        this.cal = Calendar.getInstance(localTZ);
+        this.cal = Calendar.getInstance(this.localTZ);
         this.p = Pattern.compile("(\\d{4})-(\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2})");
     }
 
@@ -63,9 +63,9 @@ public class DateUtil {
         try {
             Matcher m = p.matcher(dateStr);
             if (m.matches()) {
-                cal.set(Integer.parseInt(m.group(1)), (Integer.parseInt(m.group(2)) - 1), 
-                    Integer.parseInt(m.group(3)), Integer.parseInt(m.group(4)), 
-                    Integer.parseInt(m.group(5)), Integer.parseInt(m.group(6)));
+                cal.set(Integer.parseInt(m.group(1)), (Integer.parseInt(m.group(2)) - 1),
+                        Integer.parseInt(m.group(3)), Integer.parseInt(m.group(4)),
+                        Integer.parseInt(m.group(5)), Integer.parseInt(m.group(6)));
                 timeMilli = cal.getTimeInMillis();
                 timeSecs = Math.abs(timeMilli / SECONDS_IN_MILLI);
                 timeMilli = timeSecs * SECONDS_IN_MILLI;
@@ -127,5 +127,3 @@ public class DateUtil {
         return day;
     }
 }
-
-

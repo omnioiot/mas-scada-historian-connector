@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.ArrayList;
 import java.util.Properties;
 import org.json.JSONObject;
@@ -306,6 +307,7 @@ public class DataProvider {
             Date sDate = new Date(startMilli);
             Date eDate = new Date(endMilli);
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            df.setTimeZone(TimeZone.getTimeZone("UTC"));
             String sDateStr = df.format(sDate);
             String eDateStr = df.format(eDate);
             sqlStr = String.format(sqlQueryTemplate, sDateStr, eDateStr);

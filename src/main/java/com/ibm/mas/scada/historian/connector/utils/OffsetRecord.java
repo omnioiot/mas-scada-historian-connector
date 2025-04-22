@@ -53,7 +53,7 @@ public class OffsetRecord {
         JSONObject connConfig = config.getConnectionConfig();
         JSONObject historianConfig = connConfig.getJSONObject("historian");
         this.startDate = historianConfig.getString("startDate");
-        this.historianTimeZone = historianConfig.optString("serverTimezone", "America/Chicago");
+        this.historianTimeZone = historianConfig.optString("serverTimezone", "UTC");
         this.offsetId = config.getClientSite();
         offsetInterval = historianConfig.optInt("extractInterval", 120);
         if (offsetInterval > 120)
