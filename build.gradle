@@ -38,12 +38,12 @@ configurations {
 }
 
 dependencies {
-    libs 'org.json:json:20211205'
+    libs 'org.json:json:20250107'
     libs 'org.apache.commons:commons-jcs3-core:3.0'
     libs 'org.apache.commons:commons-csv:1.9.0'
-    libs 'commons-net:commons-net:3.0.1'
-    libs 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
-    libs 'com.ibm.db2:jcc:11.5.0.0'
+    libs 'commons-net:commons-net:3.9.0'
+    libs 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
+    // libs 'com.ibm.db2:jcc:11.5.0.0'
     libs 'org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5'
 
     testImplementation 'junit:junit:4.13.1'
