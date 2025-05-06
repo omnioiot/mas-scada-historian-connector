@@ -42,9 +42,9 @@ public final class Connector {
     public static void main(String[] args) {
         String installDir = null;
         String dataVolume = null;
-        String configDir;
-        String dataDir;
-        String logDir;
+        String configDir = null;
+        String dataDir = null;
+        String logDir = null;
         String userHome = System.getProperty("user.home");
         String os = System.getProperty("os.name");
         int connectorType = Constants.CONNECTOR_DEVICE;
@@ -73,34 +73,21 @@ public final class Connector {
             /* Get install and data dir location from enviironment variables */
             Map<String, String> map = System.getenv();
             for (Map.Entry<String, String> entry : map.entrySet()) {
-                if (entry.getKey().compareTo("IBM_SCADA_CONNECTOR_INSTALL_DIR") == 0) {
-                    installDir = entry.getValue();
-                } else if (entry.getKey().compareTo("IBM_SCADA_CONNECTOR_DATA_VOLUME") == 0) {
-                    dataVolume = entry.getValue();
+                if (entry.getKey().compareTo("PICONNECTOR_HOME") == 0) {
+                    installDir = entry.getValue() + "/masshc";
+                    dataVolume = installDir + "/volume";
+                    configDir = dataVolume + "/config";
+                    dataDir = dataVolume + "/data";
+                    logDir = dataVolume + "/logs";
+                    System.out.println("System data directory is " + dataVolume);
+                    break;
                 }
             }
-            if (installDir == null) {
-                if (os.contains("Windows") || os.contains("windows")) {
-                    installDir = "c:/ibm/masshc";
-                } else {
-                    installDir = userHome + "/ibm/masshc";
-                }
-            }
-            if (dataVolume == null) {
-                if (os.contains("Windows") || os.contains("windows")) {
-                    dataVolume = "c:/ibm/masshc";
-                } else {
-                    dataVolume = userHome + "/ibm/masshc";
-                }
+            if (installDir == null || dataVolume == null) {
+                System.out.println("Missing the PICONNECTOR_HOME variable. Make sure it is set up");
+                System.exit(1);
             }
 
-            /*
-             * default config, data and log directories are in volume directory - to make it
-             * easy for docker env
-             */
-            configDir = dataVolume + "/volume/config";
-            dataDir = dataVolume + "/volume/data";
-            logDir = dataVolume + "/volume/logs";
         }
 
         try {
